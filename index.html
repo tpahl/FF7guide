@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FF7 Rebirth">
+<meta name="theme-color" content="#0a0814">
+<title>FF7 Rebirth — Field Guide</title>
+<style>
+  :root {
+    --bg: #080812;
+    --bg2: #0d0c1a;
+    --nav-bg: #060610;
+    --header-bg: #120828;
+    --purple: #8050d0;
+    --purple-dim: #40286a;
+    --purple-light: #c090ff;
+    --purple-text: #b080f0;
+    --purple-border: #4a2878;
+    --green: #48c878;
+    --green-dim: #1a4830;
+    --green-bg: #0d1e14;
+    --green-border: #1f5c38;
+    --red: #f08080;
+    --red-dim: #602020;
+    --red-bg: #180e0e;
+    --red-border: #5a2020;
+    --blue: #60a8e8;
+    --blue-dim: #1c3060;
+    --blue-bg: #0e1620;
+    --blue-border: #274878;
+    --text: #ddd0f0;
+    --text-dim: #9080b0;
+    --text-muted: #50386a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: Georgia, 'Times New Roman', serif; overflow: hidden; }
+
+  /* LAYOUT */
+  #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+  /* HEADER */
+  #header { background: var(--header-bg); border-bottom: 1px solid #2a1450; padding: 14px 16px 12px; text-align: center; flex-shrink: 0; }
+  #header .eyebrow { font-size: 9px; letter-spacing: 6px; color: var(--purple-dim); margin-bottom: 3px; text-transform: uppercase; }
+  #header h1 { font-size: 18px; font-weight: bold; background: linear-gradient(120deg, #c090ff, #ff80c0, #80c8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 2px; line-height: 1.2; }
+  #header .sub { font-size: 9px; color: #3a1e58; letter-spacing: 3px; margin-top: 3px; text-transform: uppercase; }
+
+  /* CHAPTER NAV */
+  #chapter-nav { display: flex; overflow-x: auto; gap: 4px; padding: 8px 12px; background: var(--nav-bg); border-bottom: 1px solid #100e20; flex-shrink: 0; scrollbar-width: none; -ms-overflow-style: none; }
+  #chapter-nav::-webkit-scrollbar { display: none; }
+  .ch-btn { flex-shrink: 0; padding: 5px 10px; border-radius: 4px; border: 1px solid #1c1438; background: transparent; color: #3d2a60; cursor: pointer; font-size: 11px; font-weight: normal; letter-spacing: 1px; white-space: nowrap; font-family: Georgia, serif; transition: all 0.15s; }
+  .ch-btn.active { border-color: var(--purple); background: linear-gradient(135deg, #2e1260, #160830); color: var(--purple-light); font-weight: bold; }
+
+  /* TAB BAR */
+  #tab-bar { display: flex; overflow-x: auto; gap: 0; padding: 0 14px; border-bottom: 1px solid #100c20; flex-shrink: 0; scrollbar-width: none; -ms-overflow-style: none; background: var(--bg2); }
+  #tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 8px 12px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: normal; white-space: nowrap; font-family: Georgia, serif; transition: all 0.15s; }
+  .tab-btn.active { border-bottom-color: var(--purple); color: var(--purple-text); font-weight: bold; }
+
+  /* SCROLL CONTENT */
+  #content { flex: 1; overflow-y: auto; padding: 0 0 60px; -webkit-overflow-scrolling: touch; }
+
+  /* CHAPTER HEADER */
+  #ch-header { padding: 16px 16px 0; }
+  .ch-num { font-size: 9px; letter-spacing: 4px; color: var(--purple-dim); margin-bottom: 3px; text-transform: uppercase; }
+  .ch-title { font-size: 22px; font-weight: bold; color: #dcc8ff; letter-spacing: 1px; margin-bottom: 4px; }
+  .ch-area { font-size: 11px; color: #503870; margin-bottom: 1px; }
+  .ch-party { font-size: 11px; color: #40306a; margin-bottom: 10px; }
+  .ch-summary { font-size: 13px; line-height: 1.75; color: var(--text-dim); margin-bottom: 10px; }
+  .ch-note { background: #140e24; border: 1px solid var(--purple-border); border-left: 3px solid var(--purple); border-radius: 6px; padding: 10px 13px; font-size: 12px; color: var(--purple-text); margin-bottom: 14px; line-height: 1.55; }
+
+  /* SECTIONS */
+  .section { padding: 0 16px; margin-bottom: 16px; }
+  .section-title { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .section-line { flex: 1; height: 1px; }
+
+  /* DECISION CARDS */
+  .decision { padding: 10px 13px; border-radius: 6px; margin-bottom: 7px; font-size: 12px; line-height: 1.65; border-left-width: 3px; border-left-style: solid; }
+  .decision.important { background: #1a1030; border: 1px solid #7840c0; border-left: 3px solid #b060f0; color: #c898f8; }
+  .decision.normal { background: #130e22; border: 1px solid #2e1a50; border-left: 3px solid #5a2a90; color: #9070c0; }
+  .decision .imp-label { font-size: 8px; color: #b060f0; letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  /* ITEM CARDS */
+  .item-card { border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--green-border); background: var(--green-bg); cursor: pointer; transition: opacity 0.15s; overflow: hidden; }
+  .item-card.done { opacity: 0.45; }
+  .item-header { display: flex; align-items: center; gap: 9px; padding: 9px 11px 7px; border-bottom: 1px solid #122018; }
+  .item-check { width: 16px; height: 16px; border-radius: 3px; border: 2px solid #1a4830; background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; }
+  .item-check.checked { background: #2a7a48; border-color: #2a7a48; }
+  .item-name { flex: 1; font-size: 13px; font-weight: bold; color: var(--green); }
+  .item-card.done .item-name { text-decoration: line-through; color: #386848; }
+  .type-badge { font-size: 8px; letter-spacing: 1px; border-radius: 3px; padding: 2px 6px; flex-shrink: 0; border-width: 1px; border-style: solid; }
+  .type-chest  { background: #122a1a; border-color: #2a7a48; color: #2a7a48; }
+  .type-pickup { background: #1e1608; border-color: #a07808; color: #a07808; }
+  .type-buy    { background: #0e1a28; border-color: #306898; color: #306898; }
+  .type-reward { background: #1e180a; border-color: #a09020; color: #a09020; }
+  .type-drop   { background: #1e0e0e; border-color: #803030; color: #803030; }
+  .item-body { padding: 8px 11px 10px; }
+  .item-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #1a5035; display: inline-block; margin-right: 4px; }
+  .item-when { font-size: 11px; color: #286848; line-height: 1.55; margin-bottom: 5px; }
+  .item-how  { font-size: 12px; color: #3a8858; line-height: 1.6; }
+
+  /* BOSS CARDS */
+  .boss-card { background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 8px; margin-bottom: 9px; overflow: hidden; }
+  .boss-header { padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .boss-header.open { background: #220e0e; }
+  .boss-name { font-size: 14px; font-weight: bold; color: var(--red); }
+  .boss-weak { font-size: 10px; color: #905050; margin-top: 2px; }
+  .boss-arrow { color: var(--red-dim); font-size: 14px; }
+  .boss-body { padding: 0 14px 12px; border-top: 1px solid #280e0e; display: none; }
+  .boss-body.open { display: block; }
+  .boss-tip { font-size: 12px; color: #c08080; padding: 5px 0; border-bottom: 1px solid #1e0c0c; line-height: 1.6; display: flex; gap: 8px; }
+  .boss-tip:last-child { border-bottom: none; }
+  .boss-tip-arrow { color: var(--red-dim); flex-shrink: 0; }
+
+  /* TIP CARDS */
+  .tip-card { padding: 9px 13px; background: var(--blue-bg); border: 1px solid var(--blue-border); border-left: 3px solid #3060a0; border-radius: 6px; margin-bottom: 6px; font-size: 12px; color: var(--blue); line-height: 1.65; }
+
+  /* INSTALL BANNER */
+  #install-banner { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #2a1060, #180840); border-top: 1px solid var(--purple); padding: 12px 16px; font-size: 12px; color: var(--purple-text); z-index: 100; align-items: center; gap: 12px; }
+  #install-banner.show { display: flex; }
+  #install-banner button { background: var(--purple); color: #fff; border: none; border-radius: 5px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-family: Georgia, serif; flex-shrink: 0; }
+  #install-dismiss { background: transparent !important; color: var(--purple-dim) !important; padding: 7px 8px !important; }
+
+  /* IOS INSTALL TOOLTIP */
+  #ios-tip { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #1a0840, #0e0428); border-top: 1px solid var(--purple-border); padding: 14px 16px 20px; font-size: 12px; color: var(--purple-text); z-index: 100; line-height: 1.7; }
+  #ios-tip.show { display: block; }
+  #ios-tip strong { color: var(--purple-light); }
+  #ios-tip-close { float: right; background: none; border: none; color: var(--purple-dim); font-size: 18px; cursor: pointer; margin-top: -2px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="eyebrow">Field Guide</div>
+    <h1>Final Fantasy VII Rebirth</h1>
+    <div class="sub">Nintendo Switch 2 · All 14 Chapters · Works Offline</div>
+  </div>
+  <div id="chapter-nav"></div>
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="all">Overview</button>
+    <button class="tab-btn" data-tab="items">📦 Items</button>
+    <button class="tab-btn" data-tab="decisions">⚡ Choices</button>
+    <button class="tab-btn" data-tab="bosses">💀 Bosses</button>
+    <button class="tab-btn" data-tab="tips">💡 Tips</button>
+  </div>
+  <div id="content"></div>
+</div>
+
+<!-- iOS install tip -->
+<div id="ios-tip">
+  <button id="ios-tip-close">×</button>
+  <strong>Add to Home Screen for offline use:</strong><br>
+  Tap the <strong>Share button</strong> (box with arrow) at the bottom of Safari, then tap <strong>"Add to Home Screen"</strong>. The guide will work like an app — even with no internet.
+</div>
+
+<!-- Android install banner -->
+<div id="install-banner">
+  <span>Install for offline use</span>
+  <button id="install-btn">Add to Home Screen</button>
+  <button id="install-dismiss">✕</button>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────────
+const CHAPTERS = [
+  {
+    id: 1, title: "Fall of a Hero", area: "Nibelheim (Flashback)",
+    party: "Cloud + Sephiroth (flashback — temporary)",
+    summary: "A 5-year flashback. You're Cloud alongside Sephiroth, surveying the Nibel Mako Reactor with Tifa as a guide. The chapter teaches core combat mechanics. Everything you collect here disappears when the flashback ends — use it all freely.",
+    note: "⚠️ All items & materia found in Ch.1 are lost at chapter end. This is a flashback. Experiment freely — nothing carries over.",
+    decisions: [
+      { text: "Demo skip prompt: if you played the demo, you'll be asked whether to skip ahead. No consequence either way — both routes play out identically.", imp: false },
+      { text: "While in Nibelheim town before the mission: visit Cloud's Mom's house (NE corner), climb the water tower, and try Tifa's house for backstory context. None are mandatory but they add meaningful flavor.", imp: false },
+      { text: "Tifa's house: while you're upstairs, grab the Ether from the chest in the far room. Also try the piano for a moment Cloud remembers later.", imp: false },
+    ],
+    items: [
+      { name: "Ether", type: "chest",
+        when: "During your free roam in Nibelheim town, before the mountain mission starts.",
+        how: "Head to Tifa's house (just south of the water tower). Go upstairs and look for a chest in the far back room." },
+      { name: "Wind Materia", type: "pickup",
+        when: "After following Tifa up the mountain and hitting a dead end — the game tells you the bridge is out and Tifa calls you back.",
+        how: "Just as you turn around to backtrack, look right. There's a ledge slightly above you. Climb up to grab the glowing orb. Equip it — it'll help against flying enemies shortly." },
+      { name: "Level Boost Materia", type: "pickup",
+        when: "Sephiroth opens a locked Shinra facility door and you head inside for the first time.",
+        how: "Go up the stairs just inside the entrance. Before taking the elevator, turn immediately right — the materia is sitting on the ground in a small alcove." },
+      { name: "Empowerment Materia", type: "pickup",
+        when: "In the cave section labeled 'Beware the Gas' — you'll know it because the floor has toxic gas clouds and a large stone pillar in the center.",
+        how: "Don't go straight. Hug the right-side wall and circle around the big pillar to a dead-end alcove. The materia is on the ground there. Then backtrack to continue." },
+      { name: "Magnify Materia", type: "pickup",
+        when: "After you cross a section of wooden planks built along the side of a cliff — right after that wobbly crossing.",
+        how: "Don't rush forward yet. Look down and to your left — there's a lower ledge below the path. Drop down to it. The materia is sitting there. Then climb back up via the nearby handholds." },
+      { name: "Mega-Potion", type: "chest",
+        when: "After defeating the Zu — the large bird miniboss on the upper cliffs. This is the toughest enemy before the final boss.",
+        how: "Once the Zu is down, head up the stairs immediately ahead. There's a chest on the left side of the stairs. Open it before continuing upward." },
+      { name: "Precision Defense Focus Materia", type: "pickup",
+        when: "Right after the Zu fight and the Mega-Potion chest. The path splits: right leads toward the objective, left leads to a small climb.",
+        how: "Go LEFT first. Climb the ledges off to the side. The materia is at the top. Then come back and go right to continue. This extends the window for perfect blocks — very useful." },
+      { name: "Auto-cast Materia", type: "pickup",
+        when: "After climbing a long vertical ladder — you'll know it because it feels like the longest ladder in the chapter.",
+        how: "At the very top, look immediately to your LEFT before going anywhere else. The materia is right there on the ground. Easy to miss if you keep walking straight." },
+      { name: "Comet Materia", type: "chest",
+        when: "You've just cleared the second Mako gas puzzle — the one where you drag a machine through a big door to clear cloud clusters near the elevator.",
+        how: "Before stepping into the elevator, walk to the northwest edge of the platform. Drop off the side to a lower level. Break the stack of boxes there. The Comet Materia is inside. Then use the elevator." },
+      { name: "2× Elixir", type: "chest",
+        when: "On the path after the Comet Materia, heading toward the chapter's final boss arena.",
+        how: "Two chests sit along the path before the rest bench before the boss. Open both. Then use the bench before proceeding." },
+    ],
+    bosses: [
+      { name: "Materia Guardian", weakness: "Fire", tips: [
+        "Hit with physical attacks supplemented by Fire spells whenever ATB allows.",
+        "Watch for the Hindlegs grab — dodge with Circle, or switch to Sephiroth and hit the Hindleg to free Cloud and Pressure the boss.",
+        "After ~half health it climbs the ceiling. Target its legs to knock it back down and trigger Pressure.",
+        "When the game prompts Double Helix — use it only when the boss is about to cast Trine. Don't waste it early.",
+        "Finish with your Limit Break. Sephiroth's Synergy makes this fight manageable.",
+      ]},
+    ],
+    tips: [
+      "Triple Slash (Cloud ability) hits multiple enemies at once — your best move for this entire chapter.",
+      "Use Assess Materia on every new enemy type. This unlocks Chadley's VR missions in later chapters.",
+      "The Zu is weak to Wind. Use Aero from your Wind Materia to build stagger quickly.",
+      "Sephiroth is extremely powerful — swap to him when things get dicey.",
+    ],
+  },
+  {
+    id: 2, title: "A New Journey Begins", area: "Kalm / Grasslands",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII",
+    summary: "The team wakes up at an inn in Kalm — a quiet town west of Midgar. Free time to explore, build relationships, and learn game systems (Folio, Queen's Blood, weapons). Then you break out into the open-world Grasslands and reach a chocobo ranch where your mount system unlocks.",
+    note: "🔑 Party member conversations here affect a major scene in Ch.12. Every speech bubble over a party member's head is a relationship opportunity — don't skip any.",
+    decisions: [
+      { text: "Aerith invites you to the clock tower — respond however you like, you go regardless. Your answer affects your Aerith relationship meter.", imp: true },
+      { text: "While exploring Kalm: find Tifa outside the Inn, Barret at the bar inside, and Red XIII near the south gate. Each is a relationship point opportunity.", imp: true },
+      { text: "Don't buy Cloud's weapon at the weapon shop — you'll find the Sleek Saber for free near the Abandoned Dock shortly. Save your gil.", imp: true },
+      { text: "Finish everything in Kalm before heading to the clock tower to meet Aerith — you can't easily return for a while once the story progresses.", imp: false },
+    ],
+    items: [
+      { name: "Queen's Blood Starter Deck", type: "reward",
+        when: "Automatically when you first leave the inn room at the start of Chapter 2.",
+        how: "It's handed to you. Check your inventory and learn the basics — you'll use this to challenge players around town." },
+      { name: "QB Card: Crystalline Crab (013)", type: "reward",
+        when: "While exploring Kalm, just outside the inn entrance.",
+        how: "Challenge Ned — he's standing right outside the Kalm Inn door. Win the Queen's Blood match to earn this card." },
+      { name: "QB Card: Cactuar (012)", type: "reward",
+        when: "Still in Kalm, exploring the southern part of town.",
+        how: "Find Nene on a raised platform slightly south of the town center. Challenge and beat her at Queen's Blood." },
+      { name: "QB Booster Pack: Suppressive Strikers (4 cards)", type: "buy",
+        when: "Any time during Kalm exploration — before leaving town.",
+        how: "Find the Item Vendor on the east side of the river in Kalm. Buy Suppressive Strikers for 500 gil. Contains: Riot Trooper, Toxirat, Devil Rider, Flan." },
+      { name: "QB Booster Pack: Ruffians (4 cards)", type: "buy",
+        when: "Same vendor as above — buy both packs while you're there.",
+        how: "Same Kalm Item Vendor, east side of the river. Buy Ruffians for 500 gil. Contains: Genadier, Mandragora, Quetzalcoatl, Zu." },
+      { name: "QB Card: Screamer (017)", type: "reward",
+        when: "Still in Kalm — northeast corner of town, slightly hidden.",
+        how: "Go to the NE corner near the river. There's a bridge above and a red ladder going down. Climb down to find Zahira at the lower riverside. Beat her at Queen's Blood." },
+      { name: "Item Transmuter", type: "reward",
+        when: "During the escape sequence — after Shinra troops appear and innkeeper Broden leads you over rooftops.",
+        how: "Can't miss this. After Broden leads you back to the inn through the hidden route, he hands it to you. Lets you craft consumables from materials found in the world." },
+      { name: "Sleek Saber (Cloud weapon — FREE)", type: "chest",
+        when: "After leaving Kalm through the underground tunnel and entering the open Grasslands — as you approach the Abandoned Dock.",
+        how: "As you near the dock building, scan the area around it. There's a purple chest near the dock structure. Open it before entering the dock. This is why you skipped the weapon shop." },
+      { name: "Aureate Pinion (accessory)", type: "chest",
+        when: "After the dock cutscene — you're directed to Bill's Chocobo Ranch and automatically speak with Bill out front.",
+        how: "Before entering the barn, walk around to the back of the ranch building. There's a chest tucked behind it." },
+      { name: "Timeless Rod (Aerith weapon)", type: "chest",
+        when: "Inside Bill's barn — you're sent to find Chloe near the back.",
+        how: "Look to Chloe's immediate right — there's a purple chest right next to her. Grab it before speaking to her." },
+      { name: "Moogle Medal", type: "chest",
+        when: "Still inside Bill's barn, right after finding Chloe.",
+        how: "Find the ladder in the barn and climb to the upper loft. There's a chest up there. Moogle Medals are used at Moogle Emporiums for exclusive items — save them." },
+    ],
+    bosses: [],
+    tips: [
+      "Folio system unlocks here — visit Maghnata Books in Kalm when prompted. This is where you spend SP to upgrade each character's abilities.",
+      "Vending machines often have orange-highlighted discounted items. Always buy those when you see them.",
+      "Chocobo wrangling: First Chocobo faces right (sneak left). Second rotates — wait in flowers until it faces left, then move. For Piko, grab a rock, aim behind Piko with L1, throw it, then sneak up.",
+      "Queen's Blood is not just a mini-game — some late-game rewards are locked behind it. Challenge every opponent you find.",
+    ],
+  },
+  {
+    id: 3, title: "Deeper into Darkness", area: "Mithril Mines",
+    party: "Cloud / Tifa / Aerith → then Barret / Red XIII",
+    summary: "The party follows black-robed figures into the Mithril Mines. Midway through, the party splits — you play Cloud's trio first, then switch to Barret and Red XIII. Boss fight is Elena and Rude from the Turks.",
+    note: "🔑 The party splits about halfway through. Move any Materia you want on Barret or Red XIII before that happens. Once split, you lose access to Cloud's loadout until the chapter ends.",
+    decisions: [
+      { text: "Mine cart track puzzle: push the cart WITHOUT flipping the switch first. This opens the LEFT path to a chest. After grabbing it, push the cart back, flip the switch, then push it the correct way.", imp: true },
+      { text: "When you switch to Barret/Red XIII: immediately open the equipment menu and reassign Materia — especially Assess — to whoever you'll control.", imp: true },
+    ],
+    items: [
+      { name: "AP Up Materia", type: "pickup",
+        when: "Early in the mines — shortly after entering you hit a fork in the path.",
+        how: "The right path leads across a platform where the materia sits. Or drop down from the fork and take the ladder up — both routes work. Grab it before continuing." },
+      { name: "Sylph Gloves (Tifa weapon)", type: "chest",
+        when: "After dealing with the first Crawlers and grabbing the AP Up Materia — working toward the first story objective.",
+        how: "The chest is on the main path toward the objective marker. Follow the route and you'll hit it — just make sure you open it rather than running past." },
+      { name: "Ether", type: "chest",
+        when: "After dropping down into a large open cavern — notably bigger than the corridors before it.",
+        how: "Before taking the right-side path that exits the cavern, deal with the Crawlers inside. The chest is right there in the cavern near them." },
+      { name: "3× Iron Ore", type: "chest",
+        when: "In a large room where the path splits — upper route has an Ogre, lower route goes through water. Flying Archdragons guard a side area.",
+        how: "Optionally fight the Archdragon on the left side (use Aero to stagger it). The chest with Iron Ore is right there after. Useful transmuter material." },
+      { name: "3× Hi-Potion", type: "chest",
+        when: "You reach a structure with a broken ladder — the game calls this section 'Ticket Out of Here.' Crawlers guard the area.",
+        how: "After dealing with the Crawlers, look for the chest sitting right beside the broken structure. Grab it before solving the mine cart puzzle." },
+      { name: "3× Lea Titanium", type: "chest",
+        when: "After the mine cart ladder fix, you cross a bridge and reach a junction — stairs go up, a lower path drops left.",
+        how: "Drop DOWN to the left off the bridge. There's a chest with Lea Titanium at the bottom. Take the nearby ladder back up to where the stairs were, then continue." },
+      { name: "MP Up Materia", type: "pickup",
+        when: "You've switched to Barret and Red XIII. You reach a large room with water on the floor — the main route goes up and left.",
+        how: "Go DOWN into the water first. Head to the southeast dead end of the water area. The materia is sitting at the back. Then come back and take the main ladder up." },
+      { name: "Bulletproof Vest (accessory)", type: "chest",
+        when: "Barret/Red section — you reach a mine cart on tracks that splits two directions, with a switch in the middle.",
+        how: "Push the cart WITHOUT touching the switch — it goes left, where the chest is. Open it for the Bulletproof Vest. Then push cart back, flip switch, push it the other way to make the bridge." },
+      { name: "Renegarde's Collar (Red XIII weapon)", type: "chest",
+        when: "Immediately after the Elena and Rude boss fight ends — a rest spot appears.",
+        how: "Look right next to the rest point — there's a purple chest sitting right beside it. Equip it on Red XIII immediately." },
+    ],
+    bosses: [
+      { name: "Elena & Rude (Turks)", weakness: "Wind (Rude) / Lightning (Elena)", tips: [
+        "Keep Aerith in your party — set her up with a Ward and use Pray or Cure to keep Cloud and Tifa healthy.",
+        "Focus one boss at a time. Take Rude first (more HP). Stagger him with Wind (Aero), then Elena with Lightning.",
+        "When they've lost about a third of health they launch unblockable synergy attacks. Back off and dodge — don't try to trade.",
+        "Use Cloud's Counterstance whenever you have a window — it deals strong punish damage.",
+        "This is the last time you use Cloud/Tifa/Aerith this chapter. Spend all their MP freely.",
+      ]},
+    ],
+    tips: [
+      "Crawlers are weak to Fire. Crystalline Crabs are weak to Ice. Right element = much faster staggers.",
+      "Ogres can be Pressured by blocking their club swings — great for practicing Perfect Blocks.",
+      "Flan (in the Barret/Red section) resist all physical attacks. Use Fire magic — they also drop MP refills when defeated.",
+      "Keep using Assess on every new enemy type.",
+    ],
+  },
+  {
+    id: 4, title: "Dawn of a New Era", area: "Junon",
+    party: "Cloud, Aerith, Tifa (+ Yuffie joins mid-chapter)",
+    summary: "The group arrives in the Junon region. You explore Under Junon — a fishing village beneath the massive cannon city — save a girl named Priscilla from a sea monster, spend a night at the inn building relationships, then infiltrate Upper Junon disguised as Shinra infantry. Yuffie joins here.",
+    note: "🔑 Do ALL Under Junon side content and World Intel BEFORE agreeing to Priscilla's plan. You'll be locked out of the lower area for a significant stretch once you proceed.",
+    decisions: [
+      { text: "Inn stay — walk the hallway and interact with every party member's door. Each is a relationship point opportunity affecting Ch.12.", imp: true },
+      { text: "Aerith's room: as you walk past, you'll overhear her talking. Stop, listen, then interact with her door to go inside. Interact AGAIN to actually speak with her — purple chest is inside too.", imp: true },
+      { text: "Do NOT use Priscilla's plan to head up to Junon until you've done all Under Junon side quests and World Intel. Check the map for remaining intel markers first.", imp: true },
+      { text: "Parade infiltration: match the drill commands on screen. Better timing = better grade = better story outcome with Priscilla.", imp: false },
+    ],
+    items: [
+      { name: "HP Up Materia", type: "pickup",
+        when: "Right after the Terror of the Deep boss fight — Cloud washes up on shore during a cutscene.",
+        how: "After regaining control on the beach, don't immediately head back to the village. Scan the shoreline nearby — the materia is on the beach not far from where Cloud lands." },
+      { name: "Empress's Scepter (Aerith weapon)", type: "chest",
+        when: "During the inn stay — after you overhear Aerith talking in her room and enter to check on her.",
+        how: "Once inside Aerith's room, look for the purple chest. It's inside the room — grab it while you're in there before speaking with her further." },
+      { name: "Lightning Materia", type: "pickup",
+        when: "During the inn stay — you've spoken to everyone on the ground floor and headed upstairs. There's an automatic moment with Tifa near the top of the stairs.",
+        how: "After the Tifa moment, continue to the very last room at the end of the upstairs hallway. Inside, there's a fireplace — the Lightning Materia is sitting beside it. Equip this right away; your next boss is weak to it." },
+    ],
+    bosses: [
+      { name: "Terror of the Deep", weakness: "Lightning", tips: [
+        "Keep Aerith in your party — essential for party healing and breaking Water Cells with her magic-based basic attack.",
+        "Hit the head with Lightning spells to quickly build Pressure. Once Pressured, switch to strongest physical abilities.",
+        "If it traps a character in a Water Cell: use Aerith's basic attack (counts as magic) or cast a spell — physical barely dents it.",
+        "Oceanic Tornado: move to the far edge of the arena immediately when it winds up. After the main tornado, dodge the little water spouts shooting through the floor.",
+        "If it grabs a character: attack the Tail Fin right away. Ignore it and the grabbed character is instantly killed.",
+        "Aerith: when not healing, drop an Arcane Ward and double-cast Lightning for major damage.",
+      ]},
+      { name: "Roche", weakness: "None — pressure through abilities", tips: [
+        "Fast, aggressive boss on a motorcycle. Tifa's Unbridled Strength combos build stagger quickly — use her aggressively.",
+        "When Roche charges a big attack, dodge sideways (not backward) and punish during his recovery window.",
+        "Save Limit Breaks for stagger windows — that's when your damage multiplier is highest.",
+      ]},
+    ],
+    tips: [
+      "Complete all 24 World Intel in Junon before leaving — they unlock Chadley's summon VR battles.",
+      "The 'Stuck in a Rut' side quest unlocks Chocobo Carriage fast travel between all regions. Make it your first priority.",
+      "Junon has 5 side quests — they unlock after the inn night when you return to Under Junon in the morning.",
+      "At every vending machine: check for orange-highlighted discounted items and buy them.",
+    ],
+  },
+  {
+    id: 5, title: "Blood in the Water", area: "Corel Region / Costa del Sol",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "The party arrives by ship at Costa del Sol — a sunny beach resort. After some downtime, the story takes you into the Corel region: Barret's homeland. His past and a great tragedy unfold here. The chapter ends with access to the Gold Saucer.",
+    note: "🔑 Beach free time in Costa del Sol: every party member with a speech bubble is a relationship opportunity. Hit them all. This is also when the full Corel open world becomes accessible.",
+    decisions: [
+      { text: "Costa del Sol beach: interact with every party member who has a speech bubble. Direct relationship point gains that matter for Ch.12.", imp: true },
+      { text: "North Corel and Barret's backstory: pay attention to dialogue choices with Barret here. Responding supportively builds his relationship stat.", imp: true },
+    ],
+    items: [
+      { name: "Corel Region Purple Chests (weapons/accessories)", type: "chest",
+        when: "Throughout open-world exploration of the Corel region after Costa del Sol.",
+        how: "Purple chests glow distinctly. Explore with your Chocobo — check elevated areas, cliff edges, and areas slightly off the main path. These contain mid-game weapons for multiple characters." },
+      { name: "Moogle Medals", type: "chest",
+        when: "Any time during Corel region exploration.",
+        how: "Found in various chests and as exploration rewards. Save them — the Moogle Emporium in each region sells exclusive items only available with Medals." },
+    ],
+    bosses: [
+      { name: "Jenova Emergent", weakness: "No single weakness — rotate your strongest materia", tips: [
+        "Watch for Absolute Silence — it silences your entire party, blocking all magic. Have a Remedy or Esuna materia equipped on at least one character.",
+        "When tentacle appendages appear: target them to remove attack options from Jenova's next phase.",
+        "Jenova has high magic defense in some phases — if spells stop working well, switch to physical ATB abilities.",
+        "Keep Aerith casting Barriers to reduce incoming damage during vulnerability windows.",
+      ]},
+    ],
+    tips: [
+      "Corel has a Chocobo Ranch — unlock the Yellow Chocobo for better terrain traversal across the region.",
+      "Complete World Intel activities and report to Chadley to unlock summon VR battles (including Ifrit).",
+      "Once you reach the Gold Saucer at chapter's end: Chocobo Racing is the main GP source. Farm it while you're here.",
+    ],
+  },
+  {
+    id: 6, title: "Fool's Paradise", area: "Gold Saucer",
+    party: "Cloud + date partner (determined by relationship scores)",
+    summary: "The entire chapter takes place at the Gold Saucer — a massive amusement park. You'll be paired with whichever party member has the highest relationship score for a unique 'date.' Mini-games, Queen's Blood tournaments, and Chocobo Racing are all available.",
+    note: "🔑 Your date is locked by relationship scores from Chapters 1–5. Priority if tied: Aerith > Tifa > Barret > Red XIII. This date affects Chapter 14's ending.",
+    decisions: [
+      { text: "During date activities, respond positively and engage fully — it continues building that relationship score.", imp: false },
+      { text: "Queen's Blood Tournament is available this chapter — if you've been collecting cards, enter it. Exclusive cards are the reward.", imp: false },
+      { text: "Don't rush the story. Gold Saucer has more content than one visit can cover — explore and rack up GP.", imp: false },
+    ],
+    items: [
+      { name: "GP Currency (Gold Saucer)", type: "reward",
+        when: "Any time you're in the Gold Saucer — this chapter and future visits.",
+        how: "Win GP from Chocobo Racing, mini-games, and attractions. GP is spent at Chocobo Square and Battle Square on exclusive materia and items." },
+      { name: "Gil Up Materia", type: "buy",
+        when: "During your Gold Saucer visit, once you have enough GP accumulated.",
+        how: "Go to Chocobo Square — the racing area. Find the vendor and purchase Gil Up Materia for 3,000 GP. Equip it to passively earn more gil from every fight." },
+    ],
+    bosses: [
+      { name: "Custom Valkyrie", weakness: "Lightning", tips: [
+        "Aerial boss — Barret's ranged attacks or Lightning spells from Aerith work well.",
+        "When it descends to ground level, that's your window for physical ATB abilities. Go hard.",
+        "Dodge missile volleys by moving perpendicular — they track position, so cut sideways.",
+        "Attack the engine/booster units on its wings to Pressure it and bring it down faster.",
+      ]},
+    ],
+    tips: [
+      "Chocobo Racing is the fastest GP farm — learn the course layouts and upgrade your bird between races.",
+      "The piano mini-game at Gold Saucer counts toward a reward you'll receive later. Play it.",
+      "Every character has a unique date sequence — use Chapter Select later to see the others if curious.",
+    ],
+  },
+  {
+    id: 7, title: "Those Left Behind", area: "Corel / North Corel",
+    party: "Cloud, Barret, Tifa",
+    summary: "Barret's defining chapter. The tragedy of Corel — his hometown's destruction and his connection to Dyne — is fully revealed. Heavy story with major emotional beats. The boss is Dyne, someone from Barret's past.",
+    note: "🔑 This is Barret's most important story chapter. Every dialogue choice with him here significantly impacts his relationship stat.",
+    decisions: [
+      { text: "Respond supportively to Barret throughout the Corel flashback and Dyne confrontation. Direct relationship stat moments for him.", imp: true },
+      { text: "The Dyne boss fight outcome is story-mandated — the narrative conclusion is fixed. But how you engage with Barret before and after matters.", imp: false },
+    ],
+    items: [
+      { name: "Remaining Corel Region Purple Chests", type: "chest",
+        when: "If you haven't fully explored the Corel open world yet — before advancing the story.",
+        how: "Use your Chocobo and explore cliff edges, elevated areas, and side paths across the region. Purple chests contain weapons and accessories. Don't leave the region with any unvisited." },
+    ],
+    bosses: [
+      { name: "Dyne", weakness: "None — use your best abilities", tips: [
+        "Dodge his arm cannon blasts — they create lingering AoE fields on the ground. Move out of the orange zones immediately.",
+        "Pressure him by landing enough burst damage during attack recovery windows.",
+        "He becomes more aggressive and erratic at low HP — this is when you want Limit Breaks ready.",
+        "Tifa's Unbridled Strength combos build stagger quickly — lean on her for Pressure phases.",
+      ]},
+    ],
+    tips: [
+      "Complete any remaining Corel World Intel before triggering the final story push.",
+      "Check Barret's Folio and weapons — make sure he's fully upgraded since this is his spotlight chapter.",
+    ],
+  },
+  {
+    id: 8, title: "All That Glitters", area: "Gongaga Region",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "A dense jungle region — Zack Fair's hometown of Gongaga is here. Major revelations about Zack, SOLDIER, and Aerith's history with him surface. The Musclehead Colosseum in Gongaga village is the best early spot for farming materia AP and SP.",
+    note: "🔑 Musclehead Colosseum = best place to level up your materia before the mid-game difficulty spike. Run it repeatedly.",
+    decisions: [
+      { text: "Aerith has meaningful, personal dialogue in Gongaga about her past with Zack. Respond empathetically at every opportunity for relationship points.", imp: true },
+      { text: "Complete Gongaga's World Intel before moving on — enough Intel unlocks the Titan summon VR battle from Chadley.", imp: false },
+    ],
+    items: [
+      { name: "Level Boost Materia", type: "buy",
+        when: "When you reach Gongaga village and find the Moogle Emporium.",
+        how: "Spend Moogle Medals at the Emporium to purchase this. It temporarily raises the level of a linked materia by 1 — useful for accessing higher-tier spells earlier." },
+      { name: "Gongaga Purple Chests (weapons/accessories)", type: "chest",
+        when: "Throughout jungle exploration — especially the more remote parts of the Gongaga region.",
+        how: "The jungle is maze-like. Use your map and follow paths that branch away from the main story route. Elevated platforms and hidden clearings are where purple chests hide." },
+    ],
+    bosses: [
+      { name: "Grasptropod", weakness: "Ice", tips: [
+        "Hit the arms and claws with physical abilities to Pressure it — that's the key mechanic here.",
+        "Use Blizzard/Blizzara whenever ATB is available to exploit the Ice weakness and build stagger simultaneously.",
+        "When it extends its claw for a grab: dodge immediately. Being grabbed deals serious damage.",
+        "Once staggered, dump all ATB abilities and Synergy Skills. The window is your main damage opportunity.",
+      ]},
+    ],
+    tips: [
+      "The jungle paths in Gongaga are confusing — use the minimap and follow yellow Chocobo tracks to stay oriented.",
+      "Colosseum battles reward SP and materia AP. Run multiple rounds — fastest way to fill out Folios.",
+      "Chadley's Titan VR mission unlocks here once you've done enough World Intel. Do it — Titan is a strong summon.",
+    ],
+  },
+  {
+    id: 9, title: "The Planet Stirs", area: "Cosmo Canyon",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "Red XIII's home — Cosmo Canyon, a desert cliff settlement dedicated to studying the Planet. His family history, his father's sacrifice, and the truth about his past are all revealed. Ancient ruins and Cetra lore also feature prominently.",
+    note: "🔑 This is Red XIII's defining chapter. Talk to him at every opportunity for significant relationship stat gains.",
+    decisions: [
+      { text: "Red XIII's father reveal and the scenes that follow — your responses directly affect his relationship stat. Choose empathetic options.", imp: true },
+      { text: "Listen to the full dialogue from the Cosmo Canyon elders. It contains lore that becomes important context for Chapters 13 and 14.", imp: false },
+    ],
+    items: [
+      { name: "Cosmo Canyon Purple Chests (materia/weapons)", type: "chest",
+        when: "During open-world exploration of the canyon and surrounding ruins.",
+        how: "Cosmo Canyon has vertical layers — climb and descend the canyon walls. Chests are often on ledges requiring some platforming. Check every path that looks like it goes nowhere useful." },
+      { name: "Red XIII Weapons", type: "chest",
+        when: "Anywhere in the canyon area during exploration.",
+        how: "Purple chests in canyon sections contain his weapon upgrades. If Red XIII feels underpowered, check whether you've found his purple chests for this region." },
+    ],
+    bosses: [
+      { name: "Gigatrice", weakness: "Ice", tips: [
+        "It targets random party members — keep everyone's HP above 60% at all times, not just your active character.",
+        "Hit the legs with physical abilities to Pressure it. Once Pressured it drops to the ground and becomes vulnerable.",
+        "High magic output — Aerith's Barrier and MBarrier spells are very valuable here for the whole party.",
+        "Thunder breath: move perpendicular to its body (sideways), not straight back. Running away doesn't work.",
+      ]},
+    ],
+    tips: [
+      "There's a telescope in Cosmo Canyon — interact with it for lore dialogue and a hidden optional conversation.",
+      "Complete all Cosmo Canyon World Intel before moving on. It unlocks Chadley's VR content for this region.",
+    ],
+  },
+  {
+    id: 10, title: "Watcher of the Vale", area: "Nibel Region (present day)",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "The party returns to the Nibel area — same mountain region as the Chapter 1 flashback, but in the present. More is revealed about the black-robed figures and Sephiroth's influence on Cloud. Story escalates significantly.",
+    note: "🔑 Before leaving the Nibel region, stop at Kamaria's Ranch and buy Time, Warding, and Prayer Materia from the vending machine. These are among the best materia in the game and easy to miss.",
+    decisions: [
+      { text: "The black-robe encounters are story-linear — pay close attention. Key lore about Sephiroth's manipulation of Cloud is communicated here and matters for understanding Chapters 13 and 14.", imp: false },
+    ],
+    items: [
+      { name: "Time Materia", type: "buy",
+        when: "When you pass through or near Kamaria's Ranch in the Nibel region.",
+        how: "Find the vending machine at Kamaria's Ranch. Buy Time Materia here — the Haste spell it provides is one of the best abilities in the game. Cast it on Cloud at the start of every fight." },
+      { name: "Warding Materia", type: "buy",
+        when: "Same vending machine at Kamaria's Ranch.",
+        how: "Buy Warding Materia from the same vendor. Link it with elemental materia in paired armor slots to reduce or absorb elemental damage — excellent for the game's harder sections." },
+      { name: "Prayer Materia", type: "buy",
+        when: "Same vending machine at Kamaria's Ranch.",
+        how: "Buy Prayer Materia here. It heals the entire party using ATB — giving you party-wide healing that doesn't rely solely on Aerith. A major quality-of-life upgrade." },
+      { name: "Nibel Region Purple Chests", type: "chest",
+        when: "During open-world exploration of the Nibel region.",
+        how: "The region is mountainous — explore paths that climb above the main routes. Purple chests here contain late-mid-game accessories and potentially weapons." },
+    ],
+    bosses: [
+      { name: "Anuran Suppressor", weakness: "Lightning", tips: [
+        "Multi-phase boss — budget your resources across all phases, not just the first.",
+        "Spread your party out — several attacks hit in AoE and bunching together means multiple characters take full damage.",
+        "Stagger windows are short. When it staggers, immediately dump all ATB abilities from every character you can.",
+        "Keep Limit Breaks saved for Phase 2 or 3 transitions when the boss is most dangerous.",
+      ]},
+    ],
+    tips: [
+      "Cast Haste (Time Materia) on Cloud at the start of every fight — the ATB speed boost pays off for the entire encounter.",
+      "Prayer Materia lets non-Aerith characters heal the party. Equip it on Cloud or Tifa so healing isn't entirely dependent on Aerith surviving.",
+    ],
+  },
+  {
+    id: 11, title: "The Long Shadow of Shinra", area: "Shinra-controlled territory",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "Events come to a head with Shinra. Hojo, Sephiroth, and the truth behind the black-robed figures converge. Multiple significant fights in sequence with limited rest between them. Story pacing accelerates toward the endgame.",
+    note: "🔑 Stock up on consumables before this chapter. Multiple boss encounters with limited bench access. Have 10+ Mega-Potions and at least 5 Phoenix Downs per active character.",
+    decisions: [
+      { text: "Aerith's behavior and dialogue becomes noticeably different here — she seems to know something the others don't. Pay attention and respond thoughtfully. Her relationship stat still accumulates.", imp: true },
+    ],
+    items: [
+      { name: "Late-game Accessories & Armor", type: "chest",
+        when: "During exploration in this chapter — check all purple chests before triggering major story beats.",
+        how: "Purple chests in Shinra-territory areas contain late-game accessories. Don't rush past them — equip anything with better stats than what you're currently wearing." },
+      { name: "Specimen H1024 Rare Drops", type: "drop",
+        when: "During the chapter boss fight.",
+        how: "If you have Steal materia equipped on any character, use it during the fight for rare material drops. These can be transmuted into high-quality gear." },
+    ],
+    bosses: [
+      { name: "Specimen H1024", weakness: "Fire", tips: [
+        "It has multiple appendages — systematically destroy each one to limit its attack options before focusing the main body.",
+        "High HP pool — don't expect a quick fight. Maintain healing discipline and don't let anyone drop below 40%.",
+        "Use Synergy Abilities whenever both gauges are charged — one of the highest-damage windows available.",
+        "Fire spells deal bonus damage — link Elemental with Fire materia in your weapon slot for constant elemental damage on every attack.",
+      ]},
+    ],
+    tips: [
+      "Make sure all characters have their weapons fully upgraded (max ability unlocks) before starting this chapter.",
+      "Elemental materia paired with Fire in weapon slots deals bonus damage on every physical hit — set this up before the boss.",
+    ],
+  },
+  {
+    id: 12, title: "A Golden Key", area: "Varied (Gold Saucer returns)",
+    party: "Cloud + your highest-relationship party member",
+    summary: "The chapter that pays off all your relationship choices. Significant individual time with your highest-scored party member in unique story scenes. A Gold Saucer tournament is also here. This chapter directly influences Chapter 14's ending.",
+    note: "🔑 This is the payoff chapter for all relationship choices since Ch.2. The party member you've built the most rapport with joins Cloud for unique scenes you can't see any other way.",
+    decisions: [
+      { text: "Gold Saucer tournament: participate and win — exclusive rewards not available elsewhere.", imp: false },
+      { text: "Queen's Blood championship: if you've been collecting cards, the advanced tournament is available. Win it for the best QB rewards.", imp: false },
+      { text: "Respond positively during your date's unique story scenes — last major relationship-building moments before the end.", imp: false },
+    ],
+    items: [
+      { name: "Tournament Exclusive Rewards", type: "reward",
+        when: "After completing the Gold Saucer tournament in this chapter.",
+        how: "Win the tournament to receive unique materia or accessories not available anywhere else." },
+      { name: "Queen's Blood Championship Cards", type: "reward",
+        when: "If you enter and win the QB championship tournament.",
+        how: "The QB champion rewards include cards that only appear here. If you've been building your deck, this is the most meaningful tournament in the game." },
+    ],
+    bosses: [
+      { name: "Crimson Mare Mk. II", weakness: "Lightning", tips: [
+        "Fast aerial mech — ranged characters like Barret or Lightning magic from Aerith work best.",
+        "Target the engine/booster units on its sides to Pressure it and force it to ground level.",
+        "Energy beam sweep: move laterally (not backward) as the beam tracks across the arena.",
+        "Save your strongest Limit Breaks for the stagger window — damage multiplier is highest then.",
+      ]},
+    ],
+    tips: [
+      "Good checkpoint: review every character's Folio and make sure SP is fully spent on the upgrades that matter most.",
+      "Check all materia pairing setups — linked slots (Elemental + Fire, Warding + Ice, etc.) should be optimized before the final two chapters.",
+    ],
+  },
+  {
+    id: 13, title: "Where Angels Fear to Tread", area: "Forgotten Capital",
+    party: "Cloud, Aerith, Tifa, Barret, Red XIII, Yuffie",
+    summary: "The Forgotten Capital — an ancient Cetra city deeply tied to Aerith's heritage. This is the game's most emotionally intense chapter, with major events that will resonate deeply with anyone who knows the original Final Fantasy VII. Do not skip any cutscene.",
+    note: "⚠️ MAJOR STORY EVENTS OCCUR HERE. If you know the original FF7, you know what this place means. If you don't — prepare yourself. This chapter changes things.",
+    decisions: [
+      { text: "Every piece of Aerith's dialogue in the Forgotten Capital is significant. Don't rush past any conversation. Some of what she says only makes sense later, in retrospect.", imp: true },
+      { text: "Do not skip any cutscene — even if something seems familiar from the original game, FF7 Rebirth's version contains important differences.", imp: true },
+    ],
+    items: [
+      { name: "Best-in-slot Accessories (pre-final)", type: "chest",
+        when: "During exploration in the Forgotten Capital — before the point of no return.",
+        how: "Open every chest before triggering the final push of the chapter. Some contain late-game accessories that are the best available before the final chapter." },
+      { name: "Rest Points — USE ALL OF THEM", type: "reward",
+        when: "Whenever a bench appears in this chapter.",
+        how: "Rest at every single bench you encounter. This chapter strings together difficult encounters — being at full HP and MP at each step matters more here than anywhere else." },
+    ],
+    bosses: [
+      { name: "Sephiroth (Phase 1 — Forgotten Capital)", weakness: "No elemental weakness", tips: [
+        "Keep the entire party above 60% HP at all times. His attacks hit hard and he can follow up faster than you expect.",
+        "Use all your Limit Breaks — don't save them. There's a chapter break after this fight.",
+        "Aerith Barriers are essential — cast them immediately and refresh whenever they fall.",
+        "Every stagger window: dump all ATB abilities from all characters simultaneously. Windows are brief.",
+      ]},
+    ],
+    tips: [
+      "Fully upgrade every character's weapon before starting this chapter — max ability unlocks.",
+      "Stock 10+ Mega-Potions and 5+ Phoenix Downs per character in your active party. You'll use them.",
+      "If you feel underpowered: go back via Chapter Select to the Musclehead Colosseum (Ch.8) and farm AP and SP.",
+    ],
+  },
+  {
+    id: 14, title: "End of the World", area: "Singularity / Final Confrontation",
+    party: "Cloud + rotating party members across multiple fights",
+    summary: "The final chapter. Multiple boss fights across different party configurations with minimal rest between them. The ending has variations based on your Chapter 12 relationship. This is the culmination of every choice, upgrade, and relationship you've built since Chapter 1.",
+    note: "🔑 Multiple bosses back-to-back. Do not hold anything back — use all Elixirs, Mega-Potions, Turbo Ethers, and Limit Breaks. This is what you saved them for.",
+    decisions: [
+      { text: "No meaningful choices during gameplay here. The ending cutscene reflects your Chapter 12 relationship partner — that choice was already made. Enjoy the payoff.", imp: false },
+    ],
+    items: [
+      { name: "USE EVERYTHING IN YOUR INVENTORY", type: "reward",
+        when: "From the first fight through the last — all chapter long.",
+        how: "Elixirs, Hi-Elixirs, Mega-Potions, Turbo Ethers, Phoenix Downs — use them all. There is no next chapter. Hoarding items through the final chapter is the biggest mistake players make." },
+    ],
+    bosses: [
+      { name: "Sephiroth (Multiple Final Forms)", weakness: "Varies per phase — use Assess at each phase start", tips: [
+        "Budget your resources across all phases. Don't blow everything in Phase 1 — more phases are coming.",
+        "Use Assess at the start of each new phase to immediately identify weaknesses and adjust your materia.",
+        "Synergy Abilities and Limit Breaks should be used at every available opportunity — don't wait for the 'right' moment.",
+        "Keep all characters above 50% HP — one-shot mechanics exist in later phases.",
+        "Cloud's Limit Break is especially impactful in the final phase. Make sure he has it charged.",
+        "After the credits: Chapter Select unlocks for every chapter — go back for 100% completion, missed items, and alternate relationship paths.",
+      ]},
+    ],
+    tips: [
+      "If you're struggling: use Chapter Select to go back to Chapter 8 (Musclehead Colosseum) and grind AP and SP.",
+      "Elemental materia linked to the right element in your weapon slot = constant damage advantage. Verify loadout before entering.",
+      "After credits: Chapter Select unlocks for every chapter. 100% completion, missed items, and alternate relationships are all still available.",
+    ],
+  },
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let activeChapter = 1;
+let activeTab = 'all';
+let openBoss = null;
+let checked = JSON.parse(localStorage.getItem('ff7_checked') || '{}');
+
+function saveChecked() { try { localStorage.setItem('ff7_checked', JSON.stringify(checked)); } catch(e){} }
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+const typeIcon  = { chest:'📦', pickup:'✨', buy:'🛒', reward:'🏆', drop:'⚔️' };
+const typeLabel = { chest:'CHEST', pickup:'PICKUP', buy:'VENDOR', reward:'REWARD', drop:'ENEMY DROP' };
+
+function buildChapterNav() {
+  const nav = document.getElementById('chapter-nav');
+  nav.innerHTML = CHAPTERS.map(c => `
+    <button class="ch-btn${c.id===activeChapter?' active':''}" data-id="${c.id}">CH ${c.id}</button>
+  `).join('');
+  nav.querySelectorAll('.ch-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeChapter = +btn.dataset.id;
+      activeTab = 'all';
+      openBoss = null;
+      renderAll();
+    });
+  });
+}
+
+function buildTabBar() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === activeTab);
+    btn.onclick = () => { activeTab = btn.dataset.tab; renderContent(); };
+  });
+}
+
+function renderAll() {
+  buildChapterNav();
+  buildTabBar();
+  renderContent();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function renderContent() {
+  buildTabBar();
+  const ch = CHAPTERS.find(c => c.id === activeChapter);
+  const show = t => activeTab === 'all' || activeTab === t;
+
+  let html = `
+    <div id="ch-header">
+      <div class="ch-num">Chapter ${ch.id} of 14</div>
+      <div class="ch-title">${ch.title}</div>
+      <div class="ch-area">📍 ${ch.area}</div>
+      <div class="ch-party">👥 ${ch.party}</div>
+      <div class="ch-summary">${ch.summary}</div>
+      ${ch.note ? `<div class="ch-note">${ch.note}</div>` : ''}
+    </div>`;
+
+  // DECISIONS
+  if (show('decisions') && ch.decisions.length) {
+    html += `<div class="section">
+      <div class="section-title" style="color:#7030b0">⚡ KEY DECISIONS<div class="section-line" style="background:linear-gradient(90deg,#7030b040,transparent)"></div></div>
+      ${ch.decisions.map(d => `
+        <div class="decision ${d.imp?'important':'normal'}">
+          ${d.imp ? '<span class="imp-label">IMPORTANT</span>' : ''}
+          ${d.text}
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // ITEMS
+  if (show('items') && ch.items.length) {
+    html += `<div class="section">
+      <div class="section-title" style="color:#207848">💎 ITEMS TO COLLECT<div class="section-line" style="background:linear-gradient(90deg,#20784840,transparent)"></div></div>
+      <div style="font-size:9px;color:#1a4830;letter-spacing:2px;margin-bottom:8px">TAP TO MARK AS COLLECTED</div>
+      ${ch.items.map((item,i) => {
+        const key = `ch${ch.id}_item_${i}`;
+        const done = !!checked[key];
+        return `<div class="item-card${done?' done':''}" data-key="${key}">
+          <div class="item-header">
+            <div class="item-check${done?' checked':''}">${done?'✓':''}</div>
+            <div class="item-name">${item.name}</div>
+            <div class="type-badge type-${item.type}">${typeIcon[item.type]} ${typeLabel[item.type]}</div>
+          </div>
+          <div class="item-body">
+            <div class="item-when"><span class="item-label">WHEN</span>${item.when}</div>
+            <div class="item-how"><span class="item-label">HOW</span>${item.how}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // BOSSES
+  if (show('bosses') && ch.bosses.length) {
+    html += `<div class="section">
+      <div class="section-title" style="color:#882828">💀 BOSS FIGHTS<div class="section-line" style="background:linear-gradient(90deg,#88282840,transparent)"></div></div>
+      ${ch.bosses.map((boss,i) => {
+        const key = `boss_${ch.id}_${i}`;
+        const isOpen = openBoss === key;
+        return `<div class="boss-card">
+          <div class="boss-header${isOpen?' open':''}" data-bosskey="${key}">
+            <div>
+              <div class="boss-name">💀 ${boss.name}</div>
+              <div class="boss-weak">Weakness: ${boss.weakness}</div>
+            </div>
+            <div class="boss-arrow">${isOpen?'▲':'▼'}</div>
+          </div>
+          <div class="boss-body${isOpen?' open':''}">
+            ${boss.tips.map(t => `<div class="boss-tip"><span class="boss-tip-arrow">›</span><span>${t}</span></div>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // TIPS
+  if (show('tips') && ch.tips.length) {
+    html += `<div class="section">
+      <div class="section-title" style="color:#204878">💡 PRO TIPS<div class="section-line" style="background:linear-gradient(90deg,#20487840,transparent)"></div></div>
+      ${ch.tips.map(t => `<div class="tip-card">› ${t}</div>`).join('')}
+    </div>`;
+  }
+
+  const content = document.getElementById('content');
+  content.innerHTML = html;
+
+  // Attach item toggle listeners
+  content.querySelectorAll('.item-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const key = card.dataset.key;
+      checked[key] = !checked[key];
+      saveChecked();
+      renderContent();
+    });
+  });
+
+  // Attach boss toggle listeners
+  content.querySelectorAll('.boss-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const key = header.dataset.bosskey;
+      openBoss = openBoss === key ? null : key;
+      renderContent();
+    });
+  });
+}
+
+// ─── PWA / INSTALL ──────────────────────────────────────────────────────────
+// No service worker needed — this file IS the app. Save it to your device
+// and open it in Safari. Everything runs from the local file with no internet.
+
+// Android install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', () => {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+  document.getElementById('install-banner').classList.remove('show');
+});
+document.getElementById('install-dismiss').addEventListener('click', () => {
+  document.getElementById('install-banner').classList.remove('show');
+});
+
+// iOS install tip — show once, with a delay so the page renders first
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInApp = window.navigator.standalone;
+if (isIos && !isInApp && !localStorage.getItem('ff7_ios_shown')) {
+  setTimeout(() => {
+    document.getElementById('ios-tip').classList.add('show');
+    localStorage.setItem('ff7_ios_shown', '1');
+  }, 2500);
+}
+document.getElementById('ios-tip-close').addEventListener('click', () => {
+  document.getElementById('ios-tip').classList.remove('show');
+});
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>
