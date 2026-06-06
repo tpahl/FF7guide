@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0814">
+<title>FF7 Rebirth — Trackers</title>
+<style>
+:root{--bg:#080812;--bg2:#0d0c1a;--nav:#060610;--hdr:#120828;--pur:#8050d0;--pur-dim:#40286a;--pur-lt:#c090ff;--pur-txt:#b080f0;--pur-brd:#4a2878;--grn:#48c878;--grn-bg:#0d1e14;--grn-brd:#1f5c38;--gold:#d4a820;--gold-bg:#1a1408;--gold-brd:#6a4808;--txt:#ddd0f0;--txt-dim:#9080b0;--txt-mut:#50386a}
+.light{--bg:#f0ecf8;--bg2:#e8e0f4;--nav:#ddd4f0;--hdr:#e8e0ff;--pur-txt:#5030a0;--pur-brd:#9070d0;--pur:#6040b0;--pur-dim:#8060c0;--pur-lt:#4020a0;--grn:#186838;--grn-bg:#e8f4ec;--grn-brd:#2a9a58;--gold:#7a5800;--gold-bg:#fdf5e0;--gold-brd:#c09010;--txt:#1a1030;--txt-dim:#503880;--txt-mut:#9080b0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:Georgia,serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hdr{background:var(--hdr);border-bottom:1px solid var(--pur-brd);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hdr-home{font-size:18px;text-decoration:none;flex-shrink:0}
+.hdr-title{flex:1;text-align:center}
+.hdr-title h1{font-size:13px;font-weight:bold;color:var(--pur-lt);letter-spacing:1px}
+.light .hdr-title h1{color:var(--pur)}
+.hdr-sub{font-size:9px;color:var(--txt-mut);letter-spacing:2px}
+#theme-btn{background:var(--pur-brd);border:1px solid var(--pur);border-radius:16px;padding:4px 10px;font-size:11px;color:var(--pur-lt);cursor:pointer;font-family:Georgia,serif;flex-shrink:0}
+#top-nav{display:flex;background:var(--nav);border-bottom:1px solid var(--pur-brd);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+#top-nav::-webkit-scrollbar{display:none}
+.top-tab{flex-shrink:0;padding:9px 14px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--txt-mut);cursor:pointer;font-size:11px;font-family:Georgia,serif;white-space:nowrap}
+.top-tab.active{border-bottom-color:var(--pur);color:var(--pur-txt);font-weight:bold}
+#content{flex:1;overflow-y:auto;padding:0 0 60px;-webkit-overflow-scrolling:touch}
+.pg-hd{padding:14px 14px 4px;font-size:9px;letter-spacing:4px;color:var(--pur-dim);text-transform:uppercase}
+.pg-sub{padding:0 14px 12px;font-size:12px;color:var(--txt-dim);line-height:1.6}
+.info-box{margin:0 14px 12px;padding:10px 13px;background:var(--gold-bg);border:1px solid var(--gold-brd);border-left:3px solid var(--gold);border-radius:6px;font-size:12px;color:var(--gold);line-height:1.6}
+.light .info-box{color:#7a5800}
+.rel-card{border:1px solid var(--pur-brd);border-radius:8px;margin:0 14px 10px;overflow:hidden;background:var(--hdr)}
+.rel-hd{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--pur-brd)}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rel-info{flex:1}
+.rel-name{font-size:14px;font-weight:bold;color:var(--pur-lt)}
+.light .rel-name{color:var(--pur)}
+.rel-score{font-size:10px;color:var(--pur-dim)}
+.bar-wrap{height:5px;background:#1a1030;border-radius:3px;margin-top:4px;overflow:hidden}
+.light .bar-wrap{background:#ddd0f0}
+.bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pur),var(--pur-lt));transition:width .3s}
+.arrow{color:var(--pur-dim);font-size:14px}
+.rel-body{padding:10px 14px;display:none}
+.rel-body.open{display:block}
+.moment{padding:8px 10px;border-radius:6px;margin-bottom:6px;border:1px solid;cursor:pointer}
+.moment.done{opacity:.45}
+.m-hd{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.m-ch{font-size:8px;letter-spacing:2px;text-transform:uppercase}
+.m-prompt{font-size:12px;font-weight:bold;margin-bottom:4px;line-height:1.4}
+.m-best{font-size:11px;color:var(--grn);margin-bottom:2px;line-height:1.4}
+.light .m-best{color:#186838}
+.m-pts{font-size:9px;letter-spacing:1px;color:var(--txt-mut)}
+.m-dlg{background:#111a18;border-color:#1a4830}
+.m-job{background:#1a1108;border-color:#4a3008}
+.m-beat{background:#111018;border-color:#2a1848}
+.light .m-dlg{background:#e8f4ec;border-color:#2a9a58}
+.light .m-job{background:#fdf5e0;border-color:#c09010}
+.light .m-beat{background:#ede8f8;border-color:#9070d0}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1a4830;background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+.chk.on{background:#2a7a48;border-color:#2a7a48}
+.wi-card{border:1px solid var(--pur-brd);border-radius:8px;margin:0 14px 10px;overflow:hidden;background:var(--hdr)}
+.wi-hd{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.wi-name{flex:1;font-weight:bold;color:var(--pur-txt)}
+.wi-ct{font-size:11px;color:var(--pur-dim)}
+.wi-types{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 14px;border-top:1px solid var(--pur-brd)}
+.wi-type{padding:8px 10px;border-radius:6px;background:#0e1028;border:1px solid var(--pur-brd);display:flex;align-items:center;gap:8px;cursor:pointer}
+.light .wi-type{background:#ede8f8;border-color:#9070d0}
+.wi-type.done{opacity:.4}
+.wi-icon{font-size:18px;flex-shrink:0}
+.wi-tn{font-size:11px;color:var(--txt-dim);flex:1;line-height:1.4}
+.track-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:7px;margin:0 14px 7px;cursor:pointer;border:1px solid}
+.track-item.done{opacity:.4}
+.track-chk{width:16px;height:16px;border-radius:3px;border:2px solid;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+.track-name{font-size:13px;font-weight:bold;margin-bottom:2px}
+.track-sub{font-size:11px;line-height:1.5;color:var(--txt-dim)}
+.ti-pur{background:var(--hdr);border-color:var(--pur-brd)}.ti-pur .track-name{color:var(--pur-txt)}.ti-pur .track-chk{border-color:var(--pur-dim)}.ti-pur .track-chk.on{background:var(--pur);border-color:var(--pur)}
+.light .ti-pur{background:#ede8f8;border-color:#9070d0}.light .ti-pur .track-name{color:var(--pur)}
+.ti-gold{background:var(--gold-bg);border-color:var(--gold-brd)}.ti-gold .track-name{color:var(--gold)}.ti-gold .track-chk{border-color:#6a4808}.ti-gold .track-chk.on{background:var(--gold);border-color:var(--gold)}
+.light .ti-gold{background:#fdf5e0;border-color:#c09010}.light .ti-gold .track-name{color:#7a5800}
+.ti-grn{background:var(--grn-bg);border-color:var(--grn-brd)}.ti-grn .track-name{color:var(--grn)}.ti-grn .track-chk{border-color:#1a4830}.ti-grn .track-chk.on{background:#2a7a48;border-color:#2a7a48}
+.light .ti-grn{background:#e8f4ec;border-color:#2a9a58}.light .ti-grn .track-name{color:#186838}
+.sub-hd{padding:12px 14px 6px;font-size:10px;letter-spacing:3px;color:var(--pur-dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hdr">
+    <a class="hdr-home" href="index.html">🏠</a>
+    <div class="hdr-title">
+      <h1>Trackers</h1>
+      <div class="hdr-sub">BONDS · INTEL · COLLECTIBLES · QB</div>
+    </div>
+    <button id="theme-btn">☀️</button>
+  </div>
+  <div id="top-nav">
+    <button class="top-tab active" data-view="bonds">❤️ Bonds</button>
+    <button class="top-tab" data-view="intel">🗺 World Intel</button>
+    <button class="top-tab" data-view="collect">🎯 Collectibles</button>
+    <button class="top-tab" data-view="qb">🃏 Queen's Blood</button>
+  </div>
+  <div id="content"></div>
+</div>
+<script>
+const CHARS=[
+{id:"ae",name:"Aerith",emoji:"🌸",color:"#e06090",max:47,moments:[
+{ch:2,t:"dlg",p:'Outside Maghnata Books: "Wanna climb the clock tower together?"',b:'"Sure. Let\'s." ★★★',pts:3},
+{ch:4,t:"dlg",p:'Inn room: "Do you remember the first time we met?"',b:'"You shoved a flower at my face." ★★★',pts:3},
+{ch:6,t:"dlg",p:'On the beach: "I start thinking things so dark and ugly it scares me."',b:'"They\'re just thoughts." ★★★',pts:3},
+{ch:4,t:"beat",p:"Inauguration Parade: Perform well in Rufus's parade.",b:"Score well in the parade drill minigame. Gives Tifa and Aerith points.",pts:2},
+{ch:6,t:"beat",p:"Beachwear: Cloud and Aerith in the same row.",b:"Row 1: Cloud=Ocean Chocobo + Aerith=Floral Delight. Row 2: Cloud=Wild Surf + Aerith=Pink Mermaid.",pts:2},
+{ch:6,t:"beat",p:"Beach fight partner: Choose Barret & Aerith.",b:"Select Barret and Aerith when the split happens.",pts:1},
+{ch:9,t:"dlg",p:'Gongaga, outside Zack\'s parents\' house: "Pretty selfish, huh? Waltzing in there..."',b:'"They didn\'t seem to mind." ★★★',pts:3},
+{ch:10,t:"dlg",p:'River of Lights ceremony: "What will you do?" — speak to Aerith LAST or story progresses.',b:'"Encourage her." ★★★',pts:3},
+{ch:11,t:"dlg",p:'Nibelheim water tower: "You never came up here hopin\' she\'d wave?"',b:'"Sounds like something I\'d do." ★★★',pts:3},
+{ch:2,t:"job",p:"Odd Job: Flowers from the Hill (Grasslands)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: Stuck in a Rut (Junon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:6,t:"job",p:"Odd Job: Rendezvous in Costa del Sol (Corel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:8,t:"job",p:"Odd Job: The Spice of Life (Gongaga Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:10,t:"job",p:"Odd Job: Absence of a Sign (Cosmo Canyon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Beneath Still Waters (Junon Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Woodland Vigil (Gongaga Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+]},
+{id:"ti",name:"Tifa",emoji:"🥊",color:"#60a8e8",max:45,moments:[
+{ch:2,t:"dlg",p:'Mako Tank Plaza: "This tank remind you of anything?"',b:'"The place I made that promise to you." ★★★',pts:3},
+{ch:4,t:"dlg",p:'Inn upstairs: "Do you remember a guy named Emilio?"',b:'"Only person from the village I remember is you." ★★★',pts:3},
+{ch:6,t:"dlg",p:'Beach mini-bar: "Feels like it\'s been ages since Seventh Heaven."',b:'"Lots happened since then." ★★★',pts:3},
+{ch:4,t:"beat",p:"Inauguration Parade: Perform well in Rufus's parade.",b:"Score well in the parade drill minigame.",pts:2},
+{ch:6,t:"beat",p:"Beachwear: Cloud and Tifa in the same row.",b:"Row 1: Cloud=Ocean Chocobo + Tifa=Majestic Glamour. Row 2: Cloud=Wild Surf + Tifa=Shining Spirit.",pts:2},
+{ch:6,t:"beat",p:"Beach fight partner: Choose Tifa & Red XIII.",b:"Select Tifa and Red XIII when the split happens.",pts:1},
+{ch:9,t:"dlg",p:'Gongaga, by the piano building: "What sorta thing would you go for?"',b:'"Gonna go with pot roast." ★★★',pts:3},
+{ch:10,t:"dlg",p:'Cosmo Canyon ceremony crowd: "Did I sound as awkward as I felt?"',b:'"You did good." ★★★',pts:3},
+{ch:11,t:"dlg",p:'Nibelheim, Tifa\'s old house: "It was taking a toll... Then you turned up."',b:'"Have I helped you get through it at all?" ★★★',pts:3},
+{ch:2,t:"job",p:"Odd Job: A Rare Card Lost (Grasslands)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: Calling All Frogs (Junon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: Dreaming of Blue Skies (Junon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:6,t:"job",p:"Odd Job: Bodybuilders in a Bind (Corel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Gold Cup or Bust (Corel Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Sand and Circuses (Corel Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+]},
+{id:"ba",name:"Barret",emoji:"🔫",color:"#60c840",max:42,moments:[
+{ch:2,t:"dlg",p:'Rusty Arrow pub: "Not gonna have a drop till Seventh Heaven\'s back up."',b:'"First one\'s on me." ★★★',pts:3},
+{ch:4,t:"dlg",p:'Inn room: "What do you think Yuffie wants with us?"',b:'"Your autograph." ★★★',pts:3},
+{ch:6,t:"dlg",p:'Beach steps: "I couldn\'t do a damn thing for those poor bastards."',b:'"You tried. That\'s all that matters." ★★★',pts:3},
+{ch:6,t:"beat",p:"Beach fight partner: Choose Barret & Aerith.",b:"Select Barret and Aerith when the split happens.",pts:1},
+{ch:7,t:"beat",p:"Mine cart route: Choose the riskier route.",b:"Select the risky route when the split is offered.",pts:1},
+{ch:7,t:"beat",p:"Buggy escape minigame: Perform well.",b:"Aim carefully and shoot as many Shinra soldiers as possible.",pts:2},
+{ch:9,t:"dlg",p:'Gongaga, next to Cissnei\'s house: "Wonder what kind stuff we\'d end up growing here."',b:'"Mushrooms." ★★★',pts:3},
+{ch:10,t:"dlg",p:'Cosmo Canyon ceremony: "So what — we sit here and theorize?"',b:'"No, we fight." ★★★',pts:3},
+{ch:11,t:"dlg",p:'Nibelheim inn: "We gotta do something, right?"',b:'"Hell yeah you\'re right. Screw them." ★★★',pts:3},
+{ch:2,t:"job",p:"Odd Job: Lifeline in Peril (Grasslands)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: When Words Won't Do (Junon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:7,t:"job",p:"Odd Job: Missing: Mr. Birdie (Corel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:9,t:"job",p:"Odd Job: The Pursuit of Perfection (Gongaga Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Hustle and Grind (Grasslands, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Lament of the Damned (Nibel Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+]},
+{id:"re",name:"Red XIII",emoji:"🐾",color:"#d07040",max:43,moments:[
+{ch:2,t:"dlg",p:'Near west border of Kalm: "One can never be too careful with Shinra."',b:'"I knew I could count on you." ★★★',pts:3},
+{ch:4,t:"dlg",p:'Inn room past Aerith\'s: "I doubt I\'ll smell Shinra till it\'s too late."',b:'"Huh. Not good." ★★★',pts:3},
+{ch:6,t:"dlg",p:'Beach, right of stage platform: "I know I should strive to maintain my composure..."',b:'"Don\'t sweat it." ★★★',pts:3},
+{ch:5,t:"beat",p:"Shinra-8 QB Tournament: Win the Queen's Blood tournament on the ship.",b:"Win the tournament — awards Red XIII points automatically.",pts:2},
+{ch:6,t:"beat",p:"Beach fight partner: Choose Tifa & Red XIII.",b:"Select Tifa and Red XIII when the split happens.",pts:1},
+{ch:8,t:"beat",p:"3D Brawler vs Dio: Win the tutorial 3D Brawler match against Dio.",b:"Win the fight — not required to win, but gives Red XIII points.",pts:1},
+{ch:9,t:"dlg",p:"Gongaga, near the altar: Red asks which mushroom patch is from Gongaga.",b:"Select the RIGHT patch. ★★★",pts:3},
+{ch:10,t:"dlg",p:'Cosmo Canyon ceremony: "Just forget I said anything."',b:'"I\'ll lend an ear." ★★★',pts:3},
+{ch:11,t:"dlg",p:'Bottom of stairs to the Shinra Manor: "No one wants to hear people badmouth their hometown."',b:'"This isn\'t my hometown." ★★★',pts:3},
+{ch:12,t:"beat",p:"Gold Saucer QB Rematch: Beat Red XIII at Queen's Blood in Chocobo Square.",b:"Find Red XIII in Chocobo Square and win the QB match.",pts:2},
+{ch:2,t:"job",p:"Odd Job: Livestock's Bane (Grasslands)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: Where the Wind Blows (Grasslands)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:4,t:"job",p:"Odd Job: The Hardest Sell (Junon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:7,t:"job",p:"Odd Job: Of Robed Men and Ransoms (Corel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:9,t:"job",p:"Odd Job: O Chicken, Where Art Thou (Gongaga Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:10,t:"job",p:"Odd Job: From Whence Life Flows (Cosmo Canyon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:10,t:"job",p:"Odd Job: Promises to Keep (Cosmo Canyon Region)",b:"Complete and gold-star the side quest.",pts:2},
+]},
+{id:"yu",name:"Yuffie",emoji:"🌟",color:"#c060c0",max:40,moments:[
+{ch:6,t:"dlg",p:'Near ice cream stand, Costa del Sol: "You\'re obviously captivated by my bodacious beach bod."',b:'"Yeah. Obviously." ★★★',pts:3},
+{ch:6,t:"dlg",p:"After joining Cloud's group at end of Ch.6: respond to her four questions.",b:'"Beat it" then "Kinda" then "Hardly" then "...You can come with." — counter-intuitive but best answers.',pts:2},
+{ch:7,t:"beat",p:"Mine cart route: Choose the safer route.",b:"Select the safer route when the split is offered.",pts:1},
+{ch:9,t:"dlg",p:'Inside house with rest spot, Gongaga: "I am so, so bored..."',b:'"Nice song. Funny too." ★★★',pts:3},
+{ch:10,t:"dlg",p:'Cosmo Canyon ceremony crowd: "Once you die, that\'s that."',b:'"Pretty much." ★★★',pts:3},
+{ch:11,t:"dlg",p:'Nibelheim, path to the mansion: "What about, say... materia?"',b:'"Yup." ★★★',pts:3},
+{ch:12,t:"beat",p:"3D Brawler vs Yuffie in Wonderment Square: Beat her in the match.",b:"Win the 3D Brawler game against Yuffie.",pts:2},
+{ch:6,t:"job",p:"Odd Job: The Saga of the Seaside Inn (Corel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:8,t:"job",p:"Odd Job: Teach Me, Great Warrior (Gongaga Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:10,t:"job",p:"Odd Job: Bonds of Trust (Cosmo Canyon Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:11,t:"job",p:"Odd Job: Esoteric Secrets of the Elders (Nibel Region)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Tides of War and Worry (Junon Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Trouble in Paradise (Corel Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+{ch:12,t:"job",p:"Odd Job: Victim of Circumstance (Cosmo Canyon Region, Ch.12)",b:"Complete and gold-star the side quest.",pts:2},
+]},
+];
+const INTEL=[
+{r:"Grasslands",ch:2,tot:20,types:[{i:"📡",n:"Remnawave Towers",c:5},{i:"⚔️",n:"Fiend Intel",c:4},{i:"🔮",n:"Divine Intel",c:3},{i:"🦉",n:"Expedition Intel",c:3},{i:"🦴",n:"Excavation Intel",c:2},{i:"🐾",n:"Classified Intel",c:1},{i:"🐹",n:"Moogle Intel",c:1},{i:"🗿",n:"Phenomenon Intel (Protorelics)",c:1}]},
+{r:"Junon Region",ch:4,tot:24,types:[{i:"📡",n:"Remnawave Towers",c:5},{i:"⚔️",n:"Fiend Intel",c:5},{i:"🔮",n:"Divine Intel",c:3},{i:"🦉",n:"Expedition Intel",c:4},{i:"🦴",n:"Excavation Intel",c:2},{i:"🐾",n:"Classified Intel",c:2},{i:"🐹",n:"Moogle Intel",c:2},{i:"🗿",n:"Phenomenon Intel",c:1}]},
+{r:"Corel Region",ch:7,tot:30,types:[{i:"📡",n:"Remnawave Towers",c:6},{i:"⚔️",n:"Fiend Intel",c:6},{i:"🔮",n:"Divine Intel",c:4},{i:"🦉",n:"Expedition Intel",c:4},{i:"🦴",n:"Excavation Intel",c:3},{i:"🐾",n:"Classified Intel",c:2},{i:"🐹",n:"Moogle Intel",c:3},{i:"🗿",n:"Phenomenon Intel (last 2 unlock Ch.12)",c:2}]},
+{r:"Gongaga Region",ch:9,tot:24,types:[{i:"📡",n:"Remnawave Towers",c:5},{i:"⚔️",n:"Fiend Intel",c:5},{i:"🔮",n:"Divine Intel",c:3},{i:"🦉",n:"Expedition Intel",c:4},{i:"🦴",n:"Excavation Intel",c:2},{i:"🐾",n:"Classified Intel",c:2},{i:"🐹",n:"Moogle Intel",c:2},{i:"🗿",n:"Phenomenon Intel",c:1}]},
+{r:"Cosmo Canyon Region",ch:10,tot:24,types:[{i:"📡",n:"Remnawave Towers",c:5},{i:"⚔️",n:"Fiend Intel",c:5},{i:"🔮",n:"Divine Intel",c:3},{i:"🦉",n:"Expedition Intel",c:4},{i:"🦴",n:"Excavation Intel",c:2},{i:"🐾",n:"Classified Intel",c:2},{i:"🐹",n:"Moogle Intel",c:2},{i:"🗿",n:"Phenomenon Intel",c:1}]},
+{r:"Nibel Region",ch:11,tot:25,types:[{i:"📡",n:"Remnawave Towers",c:5},{i:"⚔️",n:"Fiend Intel",c:5},{i:"🔮",n:"Divine Intel",c:4},{i:"🦉",n:"Expedition Intel",c:4},{i:"🦴",n:"Excavation Intel",c:2},{i:"🐾",n:"Classified Intel",c:2},{i:"🐹",n:"Moogle Intel",c:2},{i:"🗿",n:"Phenomenon Intel",c:1}]},
+];
+const PIANOS=[
+{n:"Kalm — Clock Tower",ch:2,note:"Play during free time in Kalm before progressing to the clock tower."},
+{n:"Costa del Sol — Royal Coast Hotel",ch:6,note:"Inside the Royal Coast Concert activity during beach free time."},
+{n:"Gongaga — Building near Tifa",ch:9,note:"Find the piano in the building where Tifa stands during the village exploration."},
+{n:"Cosmo Canyon — Observatory area",ch:10,note:"In Bugenhagen's observatory complex during your visit."},
+{n:"Nibelheim — Tifa's Old House",ch:11,note:"Upstairs in Tifa's old house (now a treatment center) during Nibelheim exploration."},
+{n:"Sixth Song — 'My White-Haired Angel' Side Quest",ch:11,note:"Complete this Nibel Region side quest to unlock the final song. Then speak to Dorian (by the first 5 pianos) with an A Rank on all 6."},
+];
+const CHOCOBOS=[
+{n:"Yellow Chocobo (Grasslands)",ch:2,h:"Story-mandatory — caught during Ch.2 at Bill's Ranch as part of the main quest."},
+{n:"Coastal Chocobo (Junon Region)",ch:4,h:"Start 'Stuck in a Rut' side quest. Talk to Gabe at his ranch south of the Junon Remnawave Tower."},
+{n:"Desert Chocobo (Corel Region)",ch:6,h:"Auto-unlocked via 'Rendezvous in Costa del Sol' side quest at the Costa del Sol beach."},
+{n:"Mountain Chocobo (Gongaga Region)",ch:9,h:"Auto-unlocked by end of Ch.9 story. No special effort required."},
+{n:"Canyon Chocobo (Cosmo Canyon Region)",ch:10,h:"Complete Chocobo Intel at the Cosmo Canyon Chocobo Ranch at the start of Ch.10."},
+{n:"Nibel Chocobo (Nibel Region)",ch:11,h:"Complete Chocobo Intel at the Nibel Airstrip at the very start of Ch.11."},
+];
+
+let view='bonds',light=false,openChar=null,openWI=null;
+let S={};try{S=JSON.parse(localStorage.getItem('ff7t2')||'{}');}catch(e){}
+function save(){try{localStorage.setItem('ff7t2',JSON.stringify(S));}catch(e){}}
+function get(k){return!!S[k];}
+function tog(k,e){if(e){e.stopPropagation();e.preventDefault();}S[k]=!S[k];save();render();}
+
+function score(id){const c=CHARS.find(x=>x.id===id);return c.moments.reduce((t,m,i)=>t+(get('r_'+id+i)?m.pts:0),0);}
+const MT={dlg:{cls:'m-dlg',lbl:'💬 Dialogue'},job:{cls:'m-job',lbl:'📋 Odd Job'},beat:{cls:'m-beat',lbl:'⭐ Story Beat'}};
+
+function rBonds(){
+  const tot=CHARS.reduce((t,c)=>t+score(c.id),0);
+  const max=CHARS.reduce((t,c)=>t+c.max,0);
+  let h=`<div class="pg-hd">BONDS OF FRIENDSHIP</div>
+  <div class="pg-sub">Track every relationship moment. Highest score = your Ch.12 date. If tied: Aerith > Tifa > Barret > Red > Yuffie. If ALL scores are too low: Cait Sith, Vincent & Cid together.</div>
+  <div class="info-box">📊 Overall: ${tot} / ${max} pts tracked across all characters</div>`;
+  CHARS.forEach(ch=>{
+    const sc=score(ch.id),pct=Math.round(sc/ch.max*100),open=openChar===ch.id;
+    h+=`<div class="rel-card">
+      <div class="rel-hd" onclick="openChar=openChar==='${ch.id}'?null:'${ch.id}';render()">
+        <div class="avatar" style="background:${ch.color}20;border:1px solid ${ch.color}40">${ch.emoji}</div>
+        <div class="rel-info">
+          <div class="rel-name">${ch.name}</div>
+          <div class="rel-score">${sc} / ${ch.max} pts (${pct}%)</div>
+          <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
+        </div>
+        <div class="arrow">${open?'▲':'▼'}</div>
+      </div>
+      <div class="rel-body${open?' open':''}">
+        ${ch.moments.map((m,i)=>{
+          const k='r_'+ch.id+i,done=get(k),mt=MT[m.t]||MT.dlg;
+          return`<div class="moment ${mt.cls}${done?' done':''}" onclick="tog('${k}',event)">
+            <div class="m-hd"><div class="chk${done?' on':''}">${done?'✓':''}</div><div class="m-ch">CH ${m.ch} — ${mt.lbl}</div></div>
+            <div class="m-prompt">${m.p}</div>
+            <div class="m-best">✓ Best: ${m.b}</div>
+            <div class="m-pts">+${m.pts} points</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+function rIntel(){
+  const totDone=INTEL.reduce((t,r)=>{const rk=r.r.replace(/\s/g,'_');return t+r.types.reduce((s,_,i)=>s+(get('wi_'+rk+i)?r.types[i].c:0),0);},0);
+  let h=`<div class="pg-hd">WORLD INTEL (169 TOTAL)</div>
+  <div class="pg-sub">Complete all World Intel in every region to unlock all Materia from Chadley and Gilgamesh Island. 10 Regional Data Points each.</div>
+  <div class="info-box">📊 Total tracked: ${totDone} / 169 Intel collected<br>💡 All Phenomenon Intel across all regions → Gilgamesh Island unlocks in Ch.12 (northeast Meridian Ocean).</div>`;
+  INTEL.forEach(r=>{
+    const rk=r.r.replace(/\s/g,'_');
+    const done=r.types.reduce((s,_,i)=>s+(get('wi_'+rk+i)?r.types[i].c:0),0);
+    const pct=Math.round(done/r.tot*100),open=openWI===rk;
+    h+=`<div class="wi-card">
+      <div class="wi-hd" onclick="openWI=openWI==='${rk}'?null:'${rk}';render()">
+        <div class="rel-info">
+          <div class="wi-name">${r.r} <span style="font-size:10px;color:var(--pur-dim)">Ch.${r.ch}</span></div>
+          <div class="rel-score">${done} / ${r.tot} intel (${pct}%)</div>
+          <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
+        </div>
+        <div class="arrow">${open?'▲':'▼'}</div>
+      </div>
+      ${open?`<div class="wi-types">${r.types.map((t,i)=>{const k='wi_'+rk+i,d2=get(k);return`<div class="wi-type${d2?' done':''}" onclick="tog('${k}',event)"><div class="wi-icon">${t.i}</div><div class="wi-tn" style="${d2?'text-decoration:line-through':''}">${t.n}</div><div class="wi-ct">${t.c}</div><div class="chk${d2?' on':''}">${d2?'✓':''}</div></div>`;}).join('')}</div>`:''}
+    </div>`;
+  });
+  return h;
+}
+
+function rCollect(){
+  const pd=PIANOS.filter((_,i)=>get('p'+i)).length;
+  const cd=CHOCOBOS.filter((_,i)=>get('c'+i)).length;
+  let h=`<div class="pg-hd">COLLECTIBLES & MILESTONES</div>
+  <div class="pg-sub">Track pianos, chocobos, and key collectibles throughout the game.</div>`;
+  h+=`<div class="sub-hd">🎹 PIANO SONGS (${pd}/6)</div>
+  <div style="padding:0 14px 10px;font-size:11px;color:var(--txt-dim);line-height:1.6">Get A Rank on all 6 songs, then speak to Dorian (standing by the first 5 pianos) for the reward.</div>`;
+  PIANOS.forEach((p,i)=>{const k='p'+i,done=get(k);
+    h+=`<div class="track-item ti-pur${done?' done':''}" onclick="tog('${k}',event)">
+      <div class="track-chk${done?' on':''}">${done?'✓':''}</div>
+      <div><div class="track-name">${p.n} <span style="font-size:9px;color:var(--pur-dim)">Ch.${p.ch}</span></div><div class="track-sub">${p.note}</div></div>
+    </div>`;
+  });
+  h+=`<div class="sub-hd">🐦 CHOCOBOS (${cd}/6)</div>
+  <div style="padding:0 14px 10px;font-size:11px;color:var(--txt-dim);line-height:1.6">Each Chocobo unlocks terrain traversal abilities unique to that region. Required for full World Intel access.</div>`;
+  CHOCOBOS.forEach((c,i)=>{const k='c'+i,done=get(k);
+    h+=`<div class="track-item ti-gold${done?' done':''}" onclick="tog('${k}',event)">
+      <div class="track-chk${done?' on':''}">${done?'✓':''}</div>
+      <div><div class="track-name">${c.n} <span style="font-size:9px;color:#8a6010">Ch.${c.ch}</span></div><div class="track-sub">${c.h}</div></div>
+    </div>`;
+  });
+  const md=get('moogle');
+  h+=`<div class="sub-hd">🐹 MOOGLE EMPORIUM RANK</div>
+  <div class="track-item ti-grn${md?' done':''}" onclick="tog('moogle',event)">
+    <div class="track-chk${md?' on':''}">${md?'✓':''}</div>
+    <div><div class="track-name">Max out Moogle Emporium Merchant Rank</div><div class="track-sub">Collect Moogle Medals from chests and exploration rewards. Spend at each region's Moogle Emporium to rank up. Max rank = Moogle Lover trophy.</div></div>
+  </div>`;
+  return h;
+}
+
+function rQB(){
+  const ranks=[
+    {r:"1-4",req:"Earn by challenging opponents in Kalm and the Grasslands region.",unlock:"Access to standard opponents"},
+    {r:"5",req:"Continue challenging QB opponents across Chapters 2-5.",unlock:"Required to challenge Navalan in North Corel"},
+    {r:"8",req:"Win enough matches through Chapters 6-8.",unlock:"Required to challenge Lidrehl at Ghost Square (Gold Saucer)"},
+    {r:"9",req:"Win enough matches through Chapters 9-11.",unlock:"Required to challenge Vincent at Shinra Manor in Nibelheim"},
+    {r:"10",req:"Defeat Vincent at Shinra Manor.",unlock:"Required to challenge the Shadowblood Queen"},
+    {r:"11 (MAX)",req:"Win the final ranked match to reach maximum rank.",unlock:"Shadowblood Queen at Gongaga Ruins — the final QB opponent in the game"},
+  ];
+  const cards=[
+    {n:"095 Ifrit",h:"Win the Shinra-8 QB Tournament (Ch.5) — auto awarded. One of the best cards in the game."},
+    {n:"013 Crystalline Crab",h:"Beat Ned just outside the Kalm Inn (Ch.2)."},
+    {n:"012 Cactuar",h:"Beat Nene on a raised platform in southern Kalm (Ch.2)."},
+    {n:"017 Screamer",h:"Beat Zahira — climb down the red ladder in NE Kalm by the river (Ch.2)."},
+    {n:"038 Bagnadrana",h:"Beat Navalan in North Corel — requires Rank 5."},
+    {n:"097 Ramuh",h:"Beat Lidrehl at Ghost Square, Gold Saucer — requires Rank 8."},
+    {n:"144 Emerald Witch",h:"Beat Vincent at Shinra Manor in Nibelheim — requires Rank 9."},
+    {n:"145 Shadowblood Queen",h:"Beat Shadowblood Queen at Gongaga Ruins — requires Rank 11. Final opponent."},
+    {n:"104 Bahamut",h:"Achieve Bronze on Nightmarish Survival at QB at Gold Saucer — requires maximum rank first."},
+  ];
+  let h=`<div class="pg-hd">QUEEN'S BLOOD PROGRESSION</div>
+  <div class="pg-sub">Track your rank milestones. Some opponents require a minimum rank. Maximum rank is 11.</div>
+  <div class="info-box">🃏 Winning the Shinra-8 tournament (Ch.5) = Card Royalty trophy. Required for the best card in the game (Ifrit).</div>
+  <div class="sub-hd">RANK MILESTONES</div>`;
+  ranks.forEach((r,i)=>{const k='qbr'+i,done=get(k);
+    h+=`<div class="track-item ti-gold${done?' done':''}" onclick="tog('${k}',event)">
+      <div class="track-chk${done?' on':''}">${done?'✓':''}</div>
+      <div style="flex:1"><div class="track-name">Rank ${r.r}</div><div class="track-sub">${r.req}</div><div style="font-size:10px;color:var(--gold);margin-top:3px">🔓 ${r.unlock}</div></div>
+    </div>`;
+  });
+  h+=`<div class="sub-hd">KEY CARDS TO WIN</div>`;
+  cards.forEach((c,i)=>{const k='qbc'+i,done=get(k);
+    h+=`<div class="track-item ti-pur${done?' done':''}" onclick="tog('${k}',event)">
+      <div class="track-chk${done?' on':''}">${done?'✓':''}</div>
+      <div><div class="track-name">${c.n}</div><div class="track-sub">${c.h}</div></div>
+    </div>`;
+  });
+  return h;
+}
+
+function render(){
+  document.querySelectorAll('.top-tab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  const map={bonds:rBonds,intel:rIntel,collect:rCollect,qb:rQB};
+  document.getElementById('content').innerHTML=(map[view]||rBonds)();
+  document.getElementById('content').scrollTop=0;
+}
+document.querySelectorAll('.top-tab').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.view;openChar=null;openWI=null;render();}));
+document.getElementById('theme-btn').addEventListener('click',()=>{light=!light;document.body.classList.toggle('light',light);document.getElementById('theme-btn').textContent=light?'🌙':'☀️';S.theme=light?'l':'d';save();});
+if(S.theme==='l'){light=true;document.body.classList.add('light');document.getElementById('theme-btn').textContent='🌙';}
+render();
+</script>
+</body>
+</html>

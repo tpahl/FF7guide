@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0814">
+<title>FF7 Rebirth - Character Builds</title>
+<style>
+:root{--bg:#080812;--bg2:#0d0c1a;--nav:#060610;--hdr:#120828;--pur:#8050d0;--pur-dim:#40286a;--pur-lt:#c090ff;--pur-txt:#b080f0;--pur-brd:#4a2878;--grn:#48c878;--grn-bg:#0d1e14;--grn-brd:#1f5c38;--red:#f08080;--red-bg:#180e0e;--red-brd:#5a2020;--blu:#60a8e8;--blu-bg:#0e1620;--blu-brd:#274878;--gold:#d4a820;--gold-bg:#1a1408;--gold-brd:#6a4808;--txt:#ddd0f0;--txt-dim:#9080b0;--txt-mut:#50386a}
+.light{--bg:#f0ecf8;--bg2:#e8e0f4;--nav:#ddd4f0;--hdr:#e8e0ff;--pur-txt:#5030a0;--pur-brd:#9070d0;--pur:#6040b0;--pur-dim:#8060c0;--pur-lt:#4020a0;--grn:#186838;--grn-bg:#e8f4ec;--grn-brd:#2a9a58;--red:#a02020;--red-bg:#f8eded;--red-brd:#c05050;--blu:#1848a0;--blu-bg:#e8f0f8;--blu-brd:#4878c0;--gold:#7a5800;--gold-bg:#fdf5e0;--gold-brd:#c09010;--txt:#1a1030;--txt-dim:#503880;--txt-mut:#9080b0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:Georgia,serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hdr{background:var(--hdr);border-bottom:1px solid var(--pur-brd);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hdr-home{font-size:18px;text-decoration:none;flex-shrink:0}
+.hdr-title{flex:1;text-align:center}
+.hdr-title h1{font-size:13px;font-weight:bold;color:var(--pur-lt);letter-spacing:1px}
+.light .hdr-title h1{color:var(--pur)}
+.hdr-sub{font-size:9px;color:var(--txt-mut);letter-spacing:2px}
+#theme-btn{background:var(--pur-brd);border:1px solid var(--pur);border-radius:16px;padding:4px 10px;font-size:11px;color:var(--pur-lt);cursor:pointer;font-family:Georgia,serif;flex-shrink:0}
+#char-nav{display:flex;overflow-x:auto;gap:4px;padding:8px 12px;background:var(--nav);border-bottom:1px solid #100e20;flex-shrink:0;scrollbar-width:none}
+#char-nav::-webkit-scrollbar{display:none}
+.ch-btn{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid #1c1438;background:transparent;color:#3d2a60;cursor:pointer;font-size:12px;font-family:Georgia,serif;white-space:nowrap}
+.ch-btn.active{border-color:var(--pur);color:var(--pur-lt);font-weight:bold}
+.light .ch-btn.active{background:var(--pur);color:#fff}
+#sec-nav{display:flex;overflow-x:auto;padding:0 14px;border-bottom:1px solid #100c20;flex-shrink:0;background:var(--bg2);scrollbar-width:none}
+#sec-nav::-webkit-scrollbar{display:none}
+.sec-tab{padding:7px 12px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--txt-mut);cursor:pointer;font-size:12px;font-family:Georgia,serif;white-space:nowrap}
+.sec-tab.active{border-bottom-color:var(--pur);color:var(--pur-txt);font-weight:bold}
+#content{flex:1;overflow-y:auto;padding:0 0 60px;-webkit-overflow-scrolling:touch}
+.char-hdr{padding:16px 15px 12px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--pur-brd)}
+.c-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2px solid}
+.c-name{font-size:22px;font-weight:bold;letter-spacing:1px;margin-bottom:3px}
+.c-role{font-size:11px;color:var(--txt-dim);line-height:1.5}
+.sec{padding:12px 15px 0}
+.sec-hd{font-size:9px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-line{flex:1;height:1px}
+.info-box{padding:10px 13px;border-radius:7px;margin-bottom:12px;border:1px solid;font-size:12px;line-height:1.6}
+.ib-pur{background:var(--hdr);border-color:var(--pur-brd);color:var(--pur-txt)}
+.ib-gold{background:var(--gold-bg);border-color:var(--gold-brd);color:var(--gold)}
+.light .ib-pur{background:#ede8f8;border-color:#9070d0;color:#5030a0}
+.light .ib-gold{color:#7a5800}
+.ib-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px;opacity:.7}
+.mat-slot{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
+.slot-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-mut);width:50px;flex-shrink:0;padding-top:11px}
+.pills{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.pill{padding:5px 10px;border-radius:16px;font-size:11px;border:1px solid;line-height:1.3}
+.pg{background:var(--grn-bg);border-color:var(--grn-brd);color:var(--grn)}
+.pb{background:var(--blu-bg);border-color:var(--blu-brd);color:var(--blu)}
+.pr{background:var(--red-bg);border-color:var(--red-brd);color:var(--red)}
+.pgo{background:var(--gold-bg);border-color:var(--gold-brd);color:var(--gold)}
+.pp{background:var(--hdr);border-color:var(--pur-brd);color:var(--pur-txt)}
+.light .pg{background:#e8f4ec;border-color:#2a9a58;color:#186838}
+.light .pb{background:#e8f0f8;border-color:#4878c0;color:#1848a0}
+.light .pr{background:#f8eded;border-color:#c05050;color:#a02020}
+.light .pgo{background:#fdf5e0;border-color:#c09010;color:#7a5800}
+.light .pp{background:#ede8f8;border-color:#9070d0;color:#5030a0}
+.wpn-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--hdr);border:1px solid var(--pur-brd);border-radius:7px;margin-bottom:7px}
+.wpn-num{width:24px;height:24px;border-radius:50%;background:var(--pur-brd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;color:var(--pur-lt);flex-shrink:0;margin-top:2px}
+.wpn-name{font-size:13px;font-weight:bold;color:var(--pur-txt);margin-bottom:2px}
+.light .wpn-name{color:var(--pur)}
+.wpn-where{font-size:11px;color:var(--pur-dim);margin-bottom:2px}
+.wpn-why{font-size:11px;color:var(--txt-dim);line-height:1.5}
+.folio-card{background:var(--hdr);border:1px solid var(--pur-brd);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.folio-hd{padding:9px 13px;font-size:11px;font-weight:bold;color:var(--pur-txt);border-bottom:1px solid var(--pur-brd);display:flex;align-items:center;gap:8px}
+.light .folio-hd{color:var(--pur)}
+.t-num{width:20px;height:20px;border-radius:50%;background:var(--pur-brd);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--pur-lt);flex-shrink:0}
+.folio-body{padding:8px 13px}
+.f-item{font-size:12px;color:var(--txt-dim);padding:4px 0;border-bottom:1px solid #1a1030;display:flex;gap:8px;line-height:1.5}
+.light .f-item{border-bottom-color:#e0d8f0}
+.f-item:last-child{border-bottom:none}
+.f-dot{color:var(--pur-dim);flex-shrink:0}
+.party-card{background:var(--hdr);border:1px solid var(--pur-brd);border-radius:8px;margin-bottom:8px;padding:11px 13px}
+.party-name{font-size:13px;font-weight:bold;color:var(--pur-txt);margin-bottom:6px}
+.light .party-name{color:var(--pur)}
+.party-members{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.pmember{padding:4px 10px;border-radius:14px;font-size:11px;border:1px solid;font-weight:bold}
+.party-why{font-size:11px;color:var(--txt-dim);line-height:1.5}
+.tip-card{padding:9px 13px;background:var(--blu-bg);border:1px solid var(--blu-brd);border-left:3px solid #3060a0;border-radius:6px;margin-bottom:6px;font-size:12px;color:var(--blu);line-height:1.65}
+.light .tip-card{color:#1848a0}
+.miss-warn{background:#1a1008;border:1px solid #6a4008;border-left:3px solid var(--gold);border-radius:5px;padding:4px 8px;font-size:9px;color:var(--gold);margin-top:4px;letter-spacing:1px}
+.light .miss-warn{background:#fdf5e0;color:#7a5800}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hdr">
+    <a class="hdr-home" href="index.html">&#127968;</a>
+    <div class="hdr-title">
+      <h1>Character Builds</h1>
+      <div class="hdr-sub">MATERIA . WEAPONS . FOLIO . PARTY</div>
+    </div>
+    <button id="theme-btn">&#9728;&#65039;</button>
+  </div>
+  <div id="char-nav"></div>
+  <div id="sec-nav">
+    <button class="sec-tab active" data-s="materia">Materia</button>
+    <button class="sec-tab" data-s="weapons">Weapons</button>
+    <button class="sec-tab" data-s="folio">Folio</button>
+    <button class="sec-tab" data-s="party">Party</button>
+    <button class="sec-tab" data-s="tips">Tips</button>
+  </div>
+  <div id="content"></div>
+</div>
+<script>
+const CHARS=[
+{id:"cloud",name:"Cloud",emoji:"&#9876;&#65039;",color:"#60a8ff",
+role:"Main DPS — aggressive melee attacker switching between Operator (mobility/combos) and Punisher mode (powerful counters). Your most flexible damage dealer throughout the game.",
+matW:[
+{l:"W1",pills:[["Elemental + Fire/Ice/Lightning (vs weakness)","pg"],["Bonus elemental damage on every physical attack","pp"]]},
+{l:"W2",pills:[["Magnify + Healing","pb"],["Heals whole party with one ATB spend","pg"]]},
+{l:"W3",pills:[["ATB Boost OR Assess","pb"]]},
+{l:"W4",pills:[["HP Up","pgo"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (damage protection)","pg"],["Reduces/nullifies incoming elemental damage","pp"]]},
+{l:"A2",pills:[["MP Up OR Steadfast Block","pgo"]]},
+{l:"A3",pills:[["Precision Defense Focus","pb"],["Extends perfect block timing window","pp"]]},
+{l:"A4",pills:[["HP Up","pgo"]]},
+],
+weapons:[
+{n:"Buster Sword",w:"Ch.1 (default)",y:"Starting weapon. Replace as soon as possible.",miss:false},
+{n:"Sleek Saber",w:"Ch.2 - FREE purple chest near Abandoned Dock",y:"Your first big upgrade. Pick this up instead of buying from the Kalm weapon shop.",miss:false},
+{n:"Umbral Blade",w:"Ch.8 - purple chest during Chocobo Racing area in Corel Desert",y:"Mid-game damage upgrade. Strong abilities for ATB combo play.",miss:false},
+{n:"Crystal Sword",w:"Ch.9 - small side room inside Gongaga Reactor (before squeezing through the door)",y:"Alternative mid-late game option. High magic attack stat for hybrid builds.",miss:false},
+{n:"Igneous Saber",w:"Ch.11 - purple chest on the platform between the two climbing walls on the mountain",y:"Late-game weapon. Strong attack stats and upgraded abilities.",miss:false},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Triple Slash upgrade (damage and ATB efficiency)","Focused Thrust (pressures enemies quickly)","Disorder (strong cross-mode ability)"]},
+{tier:"2 - Core Abilities",items:["Infinity's End (massive Limit Burst damage - unlock this early)","Counterattack passive (deal damage when you guard)","ATB efficiency passives"]},
+{tier:"3 - Endgame",items:["All HP Up nodes (maximize survivability)","Punisher mode passive upgrades","True Strike (highest single-hit damage in your kit)"]},
+],
+party:[
+{n:"Standard DPS Party",m:[["Cloud","#60a8ff"],["Tifa","#60a8e8"],["Aerith","#e06090"]],w:"Tifa builds stagger fast, Aerith heals and casts barriers, Cloud deals bulk damage during stagger windows. Best all-around composition for most of the game."},
+{n:"Boss-Killer Setup",m:[["Cloud","#60a8ff"],["Barret","#60c840"],["Aerith","#e06090"]],w:"Barret provides safe ranged damage and ATB support while Cloud recovers. Aerith covers healing. Best when boss has heavy AoE that punishes melee."},
+{n:"Stagger Rush",m:[["Cloud","#60a8ff"],["Tifa","#60a8e8"],["Red XIII","#d07040"]],w:"All three build stagger extremely quickly. Best for fights where you want to pressure and stagger as fast as possible. Bring extra consumables for healing."},
+],
+tips:[
+"Switch to Punisher mode when an enemy attacks — Perfect Block in Punisher mode triggers powerful counterattacks with no ATB cost.",
+"Triple Slash is your go-to ATB ability for multi-target fights. Focused Thrust is better for single-target pressure.",
+"Infinity's End (Limit Level 2) is one of the strongest abilities in the game. Prioritize it in the Folio.",
+"Always keep Elemental + the right element in your weapon slot and check enemy weaknesses with Assess.",
+"In Punisher mode, basic attacks interrupt enemy combos and trigger your counter — the counter deals huge damage.",
+]},
+{id:"tifa",name:"Tifa",emoji:"&#129354;",color:"#60a8e8",
+role:"Stagger Specialist — Tifa builds the stagger gauge faster than anyone else. Her Unbridled Strength stacks increase the stagger damage multiplier. Always bring her when you want to maximize damage windows.",
+matW:[
+{l:"W1",pills:[["Elemental + Fire/Ice/Lightning (vs weakness)","pg"],["Bonus elemental damage on every basic attack","pp"]]},
+{l:"W2",pills:[["ATB Stagger OR Synergy","pb"],["ATB Stagger gives ATB when you deal stagger damage","pp"]]},
+{l:"W3",pills:[["HP Up","pgo"],["Tifa is a frontline brawler - she needs max HP","pp"]]},
+{l:"W4",pills:[["Chakra","pb"],["Self-heals and removes some status effects - great self-sustain","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (for protection)","pg"],["Reduces/nullifies incoming elemental damage","pp"]]},
+{l:"A2",pills:[["HP Up","pgo"]]},
+{l:"A3",pills:[["Steadfast Block OR Precision Defense Focus","pb"],["Makes blocking and countering easier","pp"]]},
+{l:"A4",pills:[["MP Up","pgo"]]},
+],
+weapons:[
+{n:"Leather Gloves",w:"Ch.1 default",y:"Starting weapon. Replace as soon as possible.",miss:false},
+{n:"Sylph Gloves",w:"Ch.3 - purple chest in Mithril Mines on the main path to the first objective",y:"First major upgrade. Found early in Ch.3.",miss:false},
+{n:"Kaiser Knuckles",w:"Ch.5 - purple chest in the ship's lower cargo hold after defeating two Daemonic Entities. Jump up the small ledge on the LEFT.",y:"Strong mid-game option with good ATB ability scaling.",miss:false},
+{n:"Crystal Gloves",w:"Ch.11 - purple chest just past the locked door while climbing the mountain with Tifa and Yuffie",y:"Late-game weapon. High attack stats and strong abilities for maximizing stagger damage.",miss:false},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Unbridled Strength Level 2 (stacks charges faster - core to her entire kit)","Starshower (excellent gap-closer and ATB builder)","Rising Uppercut (aerial combo extension)"]},
+{tier:"2 - Core Abilities",items:["Limit Break upgrade - Rise and Fall","Whirling Uppercut (multi-hit stagger builder)","Counter Tackle passive (damage when you dodge-counter)"]},
+{tier:"3 - Endgame",items:["All HP Up nodes","Unbridled Strength Level 3 (maximum stagger multiplier stack)","ATB recharge speed passives"]},
+],
+party:[
+{n:"Stagger Core",m:[["Cloud","#60a8ff"],["Tifa","#60a8e8"],["Aerith","#e06090"]],w:"Tifa staggers and maximizes damage multiplier, Cloud deals damage during stagger windows, Aerith heals and casts Barriers. The best all-around team in the game."},
+{n:"Fast Pressure",m:[["Tifa","#60a8e8"],["Red XIII","#d07040"],["Barret","#60c840"]],w:"Barret provides safe ranged coverage and ATB, Red XIII pressures with Vengeance Mode, Tifa closes for the stagger finisher. Good against tanky single targets."},
+],
+tips:[
+"Always use Unbridled Strength BEFORE using ATB abilities during a stagger window - each charge significantly raises the stagger damage multiplier.",
+"Unbridled Strength Lv.3 (max stacks) + stagger window is the highest per-character damage output in the game.",
+"Chakra is underrated: it heals Tifa AND removes Poison/Slow - keeps her in the fight without using Aerith's ATB.",
+"Starshower is excellent for closing distance quickly and generating ATB. Use it to get in range then immediately follow with a Strength ability.",
+"Tifa struggles against airborne enemies - switch to Cloud or Barret for flying bosses.",
+]},
+{id:"aerith",name:"Aerith",emoji:"&#127800;",color:"#e06090",
+role:"Magic Damage + Party Support — Arcane Ward doubles magic spell casts for huge damage output. Also your most reliable healer and barrier caster. The only character who can easily sustain the whole party's HP and MP simultaneously.",
+matW:[
+{l:"W1",pills:[["Magnify + Healing OR Barrier","pb"],["Heals or Barriers the ENTIRE party with one ATB spend","pg"]]},
+{l:"W2",pills:[["Fire OR Lightning OR Ice (vs current weakness)","pr"],["Aerith's magic stat is very high - pure elemental spells hit extremely hard","pp"]]},
+{l:"W3",pills:[["MP Up","pgo"],["Aerith is your biggest MP spender","pp"]]},
+{l:"W4",pills:[["HP Up","pgo"],["Aerith is fragile in melee - more HP helps her survive being targeted","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (for protection)","pg"],["Reduces incoming elemental damage","pp"]]},
+{l:"A2",pills:[["MP Up","pgo"]]},
+{l:"A3",pills:[["Auto-cast + Healing","pb"],["Makes AI Aerith automatically heal teammates below 50% HP","pg"]]},
+{l:"A4",pills:[["HP Up","pgo"]]},
+],
+weapons:[
+{n:"Guard Stick",w:"Ch.1 default",y:"Starting weapon. Replace ASAP.",miss:false},
+{n:"Timeless Rod",w:"Ch.2 - FREE purple chest inside Bill's Chocobo Ranch barn, right of Chloe",y:"First major upgrade. Get this for FREE in Ch.2.",miss:false},
+{n:"Empress's Scepter",w:"Ch.4 - purple chest inside Aerith's inn room in Under Junon, after the mysterious conversation",y:"Mid-game upgrade with good magic attack scaling.",miss:false},
+{n:"Wizard's Rod",w:"Ch.7 - purple chest LEFT of the rest spot when the party splits on Mt. Corel",y:"Strong mid-game weapon for pure magic builds.",miss:false},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Arcane Ward upgrade (wider area = more spells get doubled)","Healing Wind Limit upgrade (heals the whole party effectively)","Ancient Folklore spells (large magic damage output)"]},
+{tier:"2 - Core Abilities",items:["Pulse of Life (full party HP restore - essentially a Limit Break equivalent)","Lustrous Shield (creates a barrier that blocks a set amount of damage)","Reraise passive (auto-revive a fallen character)"]},
+{tier:"3 - Endgame",items:["All MP Up nodes (Aerith burns MP fast)","Spell cast speed passives","Maximum magic potency upgrades"]},
+],
+party:[
+{n:"Full Support",m:[["Cloud","#60a8ff"],["Tifa","#60a8e8"],["Aerith","#e06090"]],w:"Aerith heals and provides Barriers so Cloud and Tifa can stay aggressive without worrying about HP. Best for difficult boss fights throughout the game."},
+{n:"Double Magic",m:[["Barret","#60c840"],["Aerith","#e06090"],["Red XIII","#d07040"]],w:"Barret and Aerith both deal strong ranged/magic damage. Red XIII provides physical pressure. Good against enemies with high magic resistance who are weak to magic."},
+],
+tips:[
+"Always set up an Arcane Ward at the start of a fight before anything else. Every spell cast inside it hits twice - massive damage multiplier.",
+"Magnify + Healing is one of the most efficient ATB spends in the game: heal the entire party for the cost of one ATB charge.",
+"Auto-cast + Healing (in linked armor slots) lets AI Aerith automatically heal teammates - frees you to focus on Cloud or Tifa.",
+"Aerith's basic attack is classified as MAGIC, not physical. This makes her uniquely effective against Water Cells and physically-resistant objects.",
+"In hard fights: Barrier first, then Arcane Ward, then spam your strongest elemental spell. This setup works in almost every situation.",
+]},
+{id:"barret",name:"Barret",emoji:"&#128299;",color:"#60c840",
+role:"Ranged Damage + HP Tank — Barret attacks safely from range while most enemies target Cloud. His high HP makes him a natural off-tank. Overcharge is one of the best single-target ATB abilities in the game.",
+matW:[
+{l:"W1",pills:[["Lightning OR Fire OR Ice (vs weakness)","pr"],["Barret applies elemental spells safely from range","pp"]]},
+{l:"W2",pills:[["ATB Boost","pb"],["Barret charges ATB at range - ATB Boost means more frequent big abilities","pp"]]},
+{l:"W3",pills:[["HP Up","pgo"],["Barret's role as off-tank requires maximum HP","pp"]]},
+{l:"W4",pills:[["Lifesaver (ability)","pb"],["Transfers incoming damage from party members to Barret - pairs with his naturally high HP","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (for protection)","pg"],["Elemental resistance means Barret takes less damage while tanking","pp"]]},
+{l:"A2",pills:[["HP Up","pgo"]]},
+{l:"A3",pills:[["HP Up (second)","pgo"],["Barret should have the highest HP in your party","pp"]]},
+{l:"A4",pills:[["Steadfast Block OR Barrier","pb"]]},
+],
+weapons:[
+{n:"Gatling Gun",w:"Ch.1 default",y:"Starting weapon. Solid for ranged play.",miss:false},
+{n:"Big Bertha",w:"Available from vendors in Junon and Corel regions",y:"Mid-game ranged upgrade. Buy when you see it at vendors.",miss:false},
+{n:"Calamitous Bazooka",w:"Ch.10 - MISSABLE purple chest on a lower platform BEFORE the First Gate in Cosmo Canyon cave trial. Turn AROUND before opening the gate and look DOWN.",y:"Major late-game upgrade. Missable if you open the gate without checking the lower platform first.",miss:true},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Maximum Fury upgrade (rapid fire ATB ability - massive damage)","Lifesaver (redirects party damage to Barret)","Smackdown (pulls airborne enemies to the ground - essential for flying bosses)"]},
+{tier:"2 - Core Abilities",items:["Overcharge upgrade (stronger single-target ATB nuke)","HP Up passives (increase Barret's HP pool)","Focus Shot (builds stagger on single targets)"]},
+{tier:"3 - Endgame",items:["All HP Up nodes (maximize his tank capacity)","ATB recharge speed passives","Big Shot Limit upgrade for maximum burst damage"]},
+],
+party:[
+{n:"Safe Damage",m:[["Cloud","#60a8ff"],["Barret","#60c840"],["Aerith","#e06090"]],w:"Barret deals ranged damage safely while Cloud handles melee. Aerith heals. Excellent for bosses that punish close-range attackers."},
+{n:"Tank Setup",m:[["Barret","#60c840"],["Tifa","#60a8e8"],["Aerith","#e06090"]],w:"Barret tanks and uses Lifesaver to absorb damage from Tifa. Tifa staggers. Aerith heals. Good for very high-damage bosses in Ch.12+."},
+],
+tips:[
+"Lifesaver is Barret's best unique ability - it redirects damage from all party members to him. With his high HP, this is extremely powerful in tough fights.",
+"Smackdown instantly pulls flying enemies to the ground, letting Cloud and Tifa deal full melee damage. Essential for aerial bosses.",
+"Maximum Fury fires rapidly and builds ATB gauge quickly. Your go-to ability during stagger windows.",
+"Barret charges ATB safely at range while the enemy targets Cloud - use him for consistent ATB income between Cloud's attacks.",
+"Against bosses with AoE ground attacks: keep Barret at maximum range and let Cloud/Tifa handle close-range aggro.",
+]},
+{id:"redxiii",name:"Red XIII",emoji:"&#128062;",color:"#d07040",
+role:"Counter Attacker + ATB Generator — Red XIII builds his Vengeance Gauge by taking damage and guarding. Once full, Vengeance Mode massively increases his damage and grants powerful counter-attacks. Supernal Fervor generates ATB for the whole team simultaneously.",
+matW:[
+{l:"W1",pills:[["Fire OR Ice OR Lightning (vs weakness)","pr"],["Red's magic stat is solid - elemental spells add significant damage","pp"]]},
+{l:"W2",pills:[["Synergy OR ATB Boost","pb"],["Red generates synergy gauge quickly during Vengeance Mode","pp"]]},
+{l:"W3",pills:[["HP Up","pgo"],["Red XIII needs to take damage to build Vengeance - HP Up helps him survive","pp"]]},
+{l:"W4",pills:[["Assess","pb"],["Red XIII is a great secondary Assess user - always identify weaknesses","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (protection)","pg"],["Keeps Red XIII healthy while he intentionally builds Vengeance","pp"]]},
+{l:"A2",pills:[["HP Up","pgo"]]},
+{l:"A3",pills:[["Precision Defense Focus","pb"],["Extends perfect block timing - critical for triggering Vengeance Mode efficiently","pp"]]},
+{l:"A4",pills:[["MP Up OR HP Up","pgo"],["Flexible slot - use what the current fight demands","pp"]]},
+],
+weapons:[
+{n:"Mythril Collar",w:"Ch.2 default",y:"Starting weapon. Decent for early game.",miss:false},
+{n:"Renegarde's Collar",w:"Ch.3 - purple chest immediately next to the rest spot right after the Elena/Rude boss fight",y:"First major upgrade. Don't miss this - it's sitting right next to the rest point after the boss.",miss:false},
+{n:"Mystic Collar",w:"Ch.10 - Trial room in Cosmo Canyon cave. Climb the RIGHT wall to the FIRST platform at the FRONT of the room. Bring that item back to Bugenhagen.",y:"Strong mid-late game weapon. Requires exploration in the trial room.",miss:false},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Vengeance Mode upgrade (faster gauge fill and stronger counter damage)","Stardust Ray (his best ATB ability - hits hard and wide)","Supernal Fervor (party ATB generation - one of the best support abilities in the game)"]},
+{tier:"2 - Core Abilities",items:["Bloodfang (builds stagger quickly during Vengeance Mode)","Wild Charge (ATB ability that also generates Vengeance)","Crescent Claw (fast attack sequence)"]},
+{tier:"3 - Endgame",items:["All HP Up nodes","Vengeance Mode duration passives","Stardust Ray damage upgrades"]},
+],
+party:[
+{n:"ATB Engine",m:[["Cloud","#60a8ff"],["Red XIII","#d07040"],["Aerith","#e06090"]],w:"Red XIII generates ATB for the whole team via Supernal Fervor. Cloud spends that ATB on powerful abilities. Aerith heals. Extremely efficient for extended fights."},
+{n:"Counter Team",m:[["Tifa","#60a8e8"],["Red XIII","#d07040"],["Barret","#60c840"]],w:"Tifa staggers. Red XIII counters and generates ATB via Vengeance Mode. Barret covers ranged damage. Good sustained DPS composition."},
+],
+tips:[
+"Supernal Fervor is one of the best abilities in the game - it generates ATB for the entire party simultaneously. Use it as often as possible.",
+"Guard intentionally to build the Vengeance Gauge - don't dodge everything. Taking a guarded hit fills the gauge and triggers counter opportunities.",
+"In Vengeance Mode, Red XIII's damage output and ATB generation are dramatically increased. Treat it like a mini-Limit Break window.",
+"Stardust Ray hits multiple targets and deals solid damage. Your go-to ATB ability for clearing groups of enemies.",
+"Red XIII can climb walls - always check walls for handholds in exploration sections. He can access areas other characters can't reach.",
+]},
+{id:"yuffie",name:"Yuffie",emoji:"&#127775;",color:"#c060c0",
+role:"Elemental Ninjutsu Specialist — Yuffie switches between elemental types mid-combat using Ninjutsu, making her uniquely adaptive to different enemy weaknesses without needing multiple elemental materia. Critical in Ch.14 final boss phases.",
+matW:[
+{l:"W1",pills:[["Ninjutsu (built-in fire/ice/wind/lightning switching)","pr"],["Switch element mid-fight to match any enemy weakness","pp"]]},
+{l:"W2",pills:[["ATB Boost OR Synergy","pb"],["Yuffie builds ATB quickly via Ninjutsu chains - ATB Boost amplifies this","pp"]]},
+{l:"W3",pills:[["HP Up","pgo"],["Yuffie is glass-cannon by default - HP Up is important","pp"]]},
+{l:"W4",pills:[["Skill Master (ability)","pb"],["Reduces ATB cost of abilities - lets Yuffie use her abilities more frequently","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (protection)","pg"],["Elemental resistance to protect Yuffie while she attacks from range","pp"]]},
+{l:"A2",pills:[["MP Up","pgo"],["Yuffie's Ninjutsu uses MP for elemental enhancement","pp"]]},
+{l:"A3",pills:[["Precision Defense Focus","pb"],["Helps Yuffie survive when enemies target her","pp"]]},
+{l:"A4",pills:[["HP Up","pgo"]]},
+],
+weapons:[
+{n:"4-Point Shuriken",w:"Ch.6 default (Yuffie joins at end of Ch.6)",y:"Starting weapon. Solid for early game use.",miss:false},
+{n:"Bird of Prey",w:"Ch.9 - purple chest inside the building with the rest spot in Gongaga village (where Yuffie is located)",y:"Mid-game upgrade. Don't miss this - it's right next to her during the village exploration.",miss:false},
+{n:"Boomerang Shuriken",w:"Available from vendors in mid-late game regions",y:"Strong mid-game alternative if you need an upgrade.",miss:false},
+{n:"Magic Shuriken",w:"Late-game vendor or exploration chest",y:"Endgame option focused on maximizing magic attack for Ninjutsu damage.",miss:false},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Ninjutsu enhancement (stronger Fire, Blizzard, Aero, Thunder Ninjutsu)","Art of War (ATB ability that deals strong multi-hit damage)","Banishment (ranged single-target ATB nuke)"]},
+{tier:"2 - Core Abilities",items:["Windstorm (AoE pressure and damage)","Doppelganger (creates a clone for additional hits during stagger)","Limit upgrade: Bloodbath"]},
+{tier:"3 - Endgame",items:["All HP Up nodes","Ninjutsu switch speed passives","ATB recharge and damage bonus passives"]},
+],
+party:[
+{n:"Elemental Flex",m:[["Cloud","#60a8ff"],["Yuffie","#c060c0"],["Aerith","#e06090"]],w:"Yuffie switches elements to match any enemy weakness without needing multiple materia. Aerith heals. Cloud handles melee pressure. Versatile for any region."},
+{n:"Ch.14 Phase Team",m:[["Red XIII","#d07040"],["Barret","#60c840"],["Yuffie","#c060c0"]],w:"Used in the final Ch.14 boss - Yuffie's elemental switching is critical for destroying Sephiroth's wings which alternate between Ice and Lightning weakness."},
+],
+tips:[
+"Your Ninjutsu element should match the current enemy weakness - switch it mid-fight freely. No need to carry multiple elemental materia.",
+"In Ch.14's final boss, wings alternate between Ice weakness (use fire Ninjutsu) and Lightning weakness (use wind Ninjutsu). Yuffie is designed for this fight.",
+"Art of War deals very strong ATB ability damage and chains well with Ninjutsu - your primary damage combo.",
+"Yuffie's Doppelganger creates a clone that mirrors your attacks. Time it during stagger windows for doubled hits.",
+"Yuffie can attack from range safely - keep her at medium-far range against bosses with large melee AoE zones.",
+]},
+{id:"caitsith",name:"Cait Sith",emoji:"&#127922;",color:"#f0a030",
+role:"Unique Moogle-Rider — Cait Sith fights by summoning his giant Moogle, which has its own health bar and handles physical attacks while Cait casts magic. His combat style is unlike any other character. Learn when to be mounted vs. unmounted.",
+matW:[
+{l:"W1",pills:[["Barrier (Manaward/Manawall)","pb"],["Barrier is Cait's signature tool - essential for the Ch.11 solo fight","pp"]]},
+{l:"W2",pills:[["Fire OR Thunder (vs weakness)","pr"],["Cait's attacks count as magic - elemental spells work well","pp"]]},
+{l:"W3",pills:[["HP Up","pgo"],["Cait himself is fragile - HP Up helps him survive being targeted","pp"]]},
+{l:"W4",pills:[["ATB Boost","pb"],["Cait's ATB charges somewhat slowly - ATB Boost makes him more responsive","pp"]]},
+],
+matA:[
+{l:"A1",pills:[["Warding + Elemental (protection)","pg"],["Reduces incoming elemental damage from bosses","pp"]]},
+{l:"A2",pills:[["MP Up","pgo"],["Cait uses MP for both magic attacks and some Moogle abilities","pp"]]},
+{l:"A3",pills:[["Steadfast Block","pb"],["Helps Cait survive when he cannot immediately mount the Moogle","pp"]]},
+{l:"A4",pills:[["HP Up","pgo"]]},
+],
+weapons:[
+{n:"Red Megaphone",w:"Ch.9 - purple chest in a WATER CAVE at the southernmost part of Gongaga village. Jump down the cliffs to the LEFT of the southernmost bridge and swim to the cave.",y:"First major weapon upgrade. Easy to miss because it requires a hidden swim path.",miss:false},
+{n:"Crystal Megaphone",w:"Ch.10 - reward from the storeroom during the Cosmo Canyon observatory section. Follow the assistant to the door and open ALL chests.",y:"Strong mid-late game weapon. Received during story progression if you explore the storeroom.",miss:false},
+{n:"Golden Megaphone",w:"Ch.11 - MISSABLE purple chest inside the SECOND cell in Shinra Manor basement. Use the mine cart on the cell door switch to open it.",y:"Late-game weapon. Easy to miss - requires throwing a box at the second cell door switch using Cait's Moogle.",miss:true},
+],
+folio:[
+{tier:"1 - Unlock First",items:["Moogle Knuckle (physical ATB ability while mounted - your primary damage source)","Moogle Rampage (Moogle charges forward dealing multiple hits - builds stagger)","Dice (random effects ATB ability - high potential payoff)"]},
+{tier:"2 - Core Abilities",items:["Moogle Laser (ranged Moogle ability for aerial targets)","HP recovery passives for Cait's personal HP","ATB generation when the Moogle takes damage"]},
+{tier:"3 - Endgame",items:["Moogle HP Up nodes (strengthens the Moogle's HP bar)","Limit Break upgrade: Slots (powerful with the right combinations)","ATB generation passives"]},
+],
+party:[
+{n:"Cait Support",m:[["Cloud","#60a8ff"],["Barret","#60c840"],["Cait Sith","#f0a030"]],w:"Cait provides Barrier and supplemental damage while Cloud and Barret handle main DPS. Barret provides the ranged coverage Cait can't always safely maintain."},
+{n:"Ch.11 Solo",m:[["Cait Sith","#f0a030"]],w:"Cait fights alone in Ch.11 for the Yin and Yang boss fight. Equip Lv.2+ Barrier Materia before this section. Manawall is essential against Thundaga."},
+],
+tips:[
+"Equip Lv.2+ Barrier Materia BEFORE Ch.11's Yin and Yang solo fight - you will need Manawall to survive the boss's heavy Thundaga attacks.",
+"Let's Ride (mounting the Moogle) is your most important action in most fights. The Moogle deals physical damage while you cast magic from safety.",
+"When the enemy resists magic: use the Moogle for physical attacks. When the enemy resists physical: dismount and cast spells.",
+"Adjudicator enemies switch immunity when pressured - alternate between Cait's magic attacks (unmounted) and Moogle physical attacks (mounted).",
+"Cait's Dice ATB ability has random effects - some are very powerful. Use it when you have ATB to spare and want high-variance outcomes.",
+]},
+];
+
+const CHAR_LIST=[
+{id:"cloud",name:"Cloud",e:"&#9876;&#65039;"},
+{id:"tifa",name:"Tifa",e:"&#129354;"},
+{id:"aerith",name:"Aerith",e:"&#127800;"},
+{id:"barret",name:"Barret",e:"&#128299;"},
+{id:"redxiii",name:"Red XIII",e:"&#128062;"},
+{id:"yuffie",name:"Yuffie",e:"&#127775;"},
+{id:"caitsith",name:"Cait Sith",e:"&#127922;"},
+];
+
+let curChar="cloud",curSec="materia",light=false;
+
+function buildNav(){
+  const nav=document.getElementById("char-nav");
+  nav.innerHTML=CHAR_LIST.map(c=>`<button class="ch-btn${c.id===curChar?" active":""}" onclick="setCh('${c.id}')">${c.e} ${c.name}</button>`).join("");
+}
+
+function buildSecNav(){
+  document.querySelectorAll(".sec-tab").forEach(b=>b.classList.toggle("active",b.dataset.s===curSec));
+}
+
+function pillHtml(pills){
+  return pills.map(([txt,cls])=>`<div class="pill ${cls}">${txt}</div>`).join("");
+}
+
+function render(){
+  buildNav();buildSecNav();
+  const b=CHARS.find(c=>c.id===curChar);
+  const color=b.color;
+  let h=`<div class="char-hdr">
+    <div class="c-avatar" style="background:${color}20;border-color:${color}60;font-size:26px">${b.emoji}</div>
+    <div><div class="c-name" style="color:${color}">${b.name}</div><div class="c-role">${b.role}</div></div>
+  </div>`;
+
+  if(curSec==="materia"){
+    h+=`<div class="sec">
+      <div class="sec-hd" style="color:${color}">MATERIA LOADOUT<div class="sec-line" style="background:linear-gradient(90deg,${color}40,transparent)"></div></div>
+      <div style="font-size:10px;color:var(--txt-mut);letter-spacing:2px;margin-bottom:10px">WEAPON SLOTS</div>`;
+    b.matW.forEach(s=>{
+      h+=`<div class="mat-slot"><div class="slot-lbl">${s.l}</div><div class="pills">${pillHtml(s.pills)}</div></div>`;
+    });
+    h+=`<div style="font-size:10px;color:var(--txt-mut);letter-spacing:2px;margin:14px 0 10px">ARMOR SLOTS</div>`;
+    b.matA.forEach(s=>{
+      h+=`<div class="mat-slot"><div class="slot-lbl">${s.l}</div><div class="pills">${pillHtml(s.pills)}</div></div>`;
+    });
+    h+=`</div>`;
+  }
+  else if(curSec==="weapons"){
+    h+=`<div class="sec">
+      <div class="sec-hd" style="color:${color}">WEAPON PROGRESSION<div class="sec-line" style="background:linear-gradient(90deg,${color}40,transparent)"></div></div>
+      <div class="info-box ib-pur" style="margin-bottom:12px">Always upgrade weapon abilities with SP as soon as you get a new weapon. Don't just equip and forget - the unlocked abilities matter as much as the weapon stats.</div>`;
+    b.weapons.forEach((w,i)=>{
+      h+=`<div class="wpn-row">
+        <div class="wpn-num">${i+1}</div>
+        <div><div class="wpn-name">${w.n}</div><div class="wpn-where">${w.w}</div><div class="wpn-why">${w.y}</div>
+        ${w.miss?`<div class="miss-warn">MISSABLE - read the location carefully</div>`:""}
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+  else if(curSec==="folio"){
+    h+=`<div class="sec">
+      <div class="sec-hd" style="color:${color}">FOLIO UPGRADE PRIORITIES<div class="sec-line" style="background:linear-gradient(90deg,${color}40,transparent)"></div></div>
+      <div class="info-box ib-pur" style="margin-bottom:12px">SP is earned from battles and World Intel (Party EXP). Unlock these in order - don't spread SP across everything early.</div>`;
+    b.folio.forEach((tier,i)=>{
+      h+=`<div class="folio-card">
+        <div class="folio-hd"><div class="t-num">${i+1}</div>${tier.tier}</div>
+        <div class="folio-body">${tier.items.map(it=>`<div class="f-item"><span class="f-dot">›</span><span>${it}</span></div>`).join("")}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+  else if(curSec==="party"){
+    h+=`<div class="sec">
+      <div class="sec-hd" style="color:${color}">PARTY COMPOSITIONS<div class="sec-line" style="background:linear-gradient(90deg,${color}40,transparent)"></div></div>
+      <div class="info-box ib-pur" style="margin-bottom:12px">Recommended team setups featuring ${b.name}. Party composition matters - these are optimized for ${b.name}'s specific strengths.</div>`;
+    b.party.forEach(p=>{
+      h+=`<div class="party-card">
+        <div class="party-name">${p.n}</div>
+        <div class="party-members">${p.m.map(([name,col])=>`<div class="pmember" style="background:${col}20;border-color:${col}60;color:${col}">${name}</div>`).join("")}</div>
+        <div class="party-why">${p.w}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+  else if(curSec==="tips"){
+    h+=`<div class="sec">
+      <div class="sec-hd" style="color:${color}">PRO TIPS<div class="sec-line" style="background:linear-gradient(90deg,${color}40,transparent)"></div></div>`;
+    b.tips.forEach(t=>{h+=`<div class="tip-card">› ${t}</div>`;});
+    h+=`</div>`;
+  }
+
+  document.getElementById("content").innerHTML=h;
+  document.getElementById("content").scrollTop=0;
+}
+
+function setCh(id){curChar=id;render();}
+document.querySelectorAll(".sec-tab").forEach(b=>b.addEventListener("click",()=>{curSec=b.dataset.s;render();}));
+document.getElementById("theme-btn").addEventListener("click",()=>{
+  light=!light;document.body.classList.toggle("light",light);
+  document.getElementById("theme-btn").textContent=light?"\uD83C\uDF19":"\u2600\uFE0F";
+});
+render();
+</script>
+</body>
+</html>
